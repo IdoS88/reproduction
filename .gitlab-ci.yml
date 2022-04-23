@@ -19,7 +19,6 @@ stages:          # List of stages for jobs, and their order of execution
 
 before_script:
   - export PATH=/usr/bin/versions/node/v16.14.2/bin/:$PATH
-  - rm -r /var/www/*
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
@@ -29,6 +28,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - npm install
     - npx tsc
     - ls -ls
+    - rm -r /var/www/*
     - mv ./dist/* ./node_modules /var/www
     - echo "Compile complete."
 
@@ -36,7 +36,6 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:
     - echo "Deploying application..."
-    - export PATH=/usr/bin/versions/node/v16.14.2/bin/:$PATH
     - cd /var/www
     - node app.js
     - echo "Application successfully deployed."
