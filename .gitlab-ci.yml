@@ -21,6 +21,8 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "Compiling the code..."
+    - export PATH = $PATH:/usr/bin/versions/node/v16.14.2/bin
+    - echo $PATH
     - npm exec tsc
     - echo "Compile complete."
 
