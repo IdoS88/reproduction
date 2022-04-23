@@ -30,7 +30,7 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:
     - echo "Deploying application..."
-    - echo $PATH
+    - export PATH=/usr/bin/versions/node/v16.14.2/bin/:$PATH
     - ls -ls
     - npm run dev
     - echo "Application successfully deployed."
