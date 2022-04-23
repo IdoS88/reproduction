@@ -24,11 +24,9 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "Compiling the code..."
-    - ls -ls
     - npm install
     - npx tsc
-    - ls -ls
-    - rm -r /var/www/*
+    - rm -r /var/www/
     - mv ./dist/* ./node_modules /var/www
     - echo "Compile complete."
 
