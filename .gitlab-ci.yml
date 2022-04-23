@@ -34,5 +34,5 @@ deploy-job:      # This job runs in the deploy stage.
     - echo "Deploying application..."
     - export PATH=/usr/bin/versions/node/v16.14.2/bin/:$PATH
     - cd /var/www
-    - ls -ls
+    - node app.js
     - echo "Application successfully deployed."
