@@ -24,7 +24,7 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "Compiling the code..."
-    - npm install
+    - npm install --production
     - npx tsc
     - rm -r /var/www/*
     - mv ./dist/* ./node_modules /var/www
@@ -35,5 +35,5 @@ deploy-job:      # This job runs in the deploy stage.
   script:
     - echo "Deploying application..."
     - cd /var/www
-    - node app.js
+    - pm2 start app.js --watch --name "nodejs-dev"
     - echo "Application successfully deployed."
