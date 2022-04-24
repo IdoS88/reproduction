@@ -17,6 +17,10 @@ stages:          # List of stages for jobs, and their order of execution
   - build
   - deploy
 
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == 'development'
+
 before_script:
   - export PATH=/usr/bin/versions/node/v16.14.2/bin/:$PATH
 
