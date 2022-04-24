@@ -34,5 +34,5 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:
     - echo "Deploying application..."
-    - systemctl restart geshem-dev
+    - sudo systemctl restart geshem-dev
     - echo "Application successfully deployed."
