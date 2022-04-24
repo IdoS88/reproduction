@@ -34,6 +34,5 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   script:
     - echo "Deploying application..."
-    - cd /var/www
-    - pm2 start app.js --watch --name "nodejs-dev"
+    - systemctl restart geshem-dev
     - echo "Application successfully deployed."
