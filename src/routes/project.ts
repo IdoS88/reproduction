@@ -7,7 +7,7 @@ appRouter.get("/", (req, res) => {
 });
 
 appRouter.get("/:id", (req, res) => {
-  res.send(`<h1>Project Number - ${req.params.id}!</h1>`);
+  res.send(`<h1>Project Number - ${req.params.id}!</h1> for now.....`);
 });
 
 export default appRouter;
