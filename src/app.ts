@@ -3,6 +3,7 @@ import project from "./routes/project";
 
 const app = express();
 const port = process.env.PORT || 8080;
+console.log(process.env.PORT);
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>');
