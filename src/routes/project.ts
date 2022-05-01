@@ -14,8 +14,12 @@ appRouter.get("/", async (req, res) => {
   res.json(projects);
 });
 
-appRouter.post("/:id", (req, res) => {
-  res.send(`<h1>Project Number - ${req.params.id}!</h1> for now.....`);
+appRouter.get("/:id",async (req, res) => {
+  let project = await projectController.GetProjectById(parseInt(req.params.id)).catch((err) => {
+    res.status(500).send(err);
+  });
+  res.json(project);
+  // res.send(`project id - ${req.params.id}`);
 });
 
 export default appRouter;

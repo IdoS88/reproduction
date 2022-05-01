@@ -9,6 +9,10 @@ export default class ProjectController {
     }
 
     async GetAllProjects() {
-        return await this.projectService.getAllPeojects();
+        return await this.projectService.getAllProjects();
+    }
+
+    async GetProjectById(projectid : number) {
+        return await this.projectService.getProjectById(projectid);
     }
 }

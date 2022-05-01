@@ -7,7 +7,13 @@ export default class ProjectService {
     constructor(projectRepo : IProjectRepository) {
         this.projectRepo = projectRepo;
     }
-    async getAllPeojects() {
+    async getAllProjects() {
         return this.projectRepo.getAll();
+    }
+
+    async getProjectById(projectid : number) {
+        if (projectid <= 0)
+            throw Error("Project id cannt be negative");
+        return this.projectRepo.getById(projectid);
     }
 }
