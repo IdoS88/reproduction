@@ -38,10 +38,10 @@ export class gPlotService {
     };
   
   async create(createGPlotDto: CreateGPlotDTO) {
-      console.log("gPlotService : create() with gplotName " + createGPlotDto.gplotName);
+      console.log("gPlotService : create() with gplotName " + createGPlotDto.gplot_name);
       let gplotEntity = new gPlot()
-      gplotEntity.gplotId=createGPlotDto.gplotId;
-      gplotEntity.gplotName=createGPlotDto.gplotName;
+      gplotEntity.project=createGPlotDto.projectid;
+      gplotEntity.gplot_name=createGPlotDto.gplot_name;
       
       await this.repository.save(gplotEntity);
       return gplotEntity.id;

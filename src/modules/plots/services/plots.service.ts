@@ -2,16 +2,16 @@ import { Injectable , HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 //import { DATABASE_CONNECTION_TOKEN } from '../../commons/db.constants';
-import { Plot } from '../entities/plot.entity';
-import { CreatePlotDTO, UpdatePlotDTO } from "../dto/plot.dto";
+import { Plots } from '../entities/plots.entity';
+import { CreatePlotDTO, UpdatePlotDTO } from "../dto/plots.dto";
 
 @Injectable()
-export class PlotService {
+export class PlotsService {
 
   //sivan: better practice to costraint the type of conn. not know yet to which interface
   constructor(
-      @InjectRepository(Plot)
-      private repository: Repository<Plot>){
+      @InjectRepository(Plots)
+      private repository: Repository<Plots>){
         console.log("on PlotService constructor")
   };
     
@@ -19,13 +19,13 @@ export class PlotService {
     return 'Hello Plot!';
   }
     
-  getAll(): Promise<Plot[]> {
+  getAll(): Promise<Plots[]> {
       console.log("PlotService : getAll()");
       return this.repository.find();
   }
 
 
-  async getById(id: number): Promise<Plot> {
+  async getById(id: number): Promise<Plots> {
     console.log("PlotService : getById() with ID " + id);
     if (id <= 0)
         throw Error("PlotService : getById() id cannot be negative");
@@ -39,11 +39,11 @@ export class PlotService {
   
   async create(createPlotDto: CreatePlotDTO) {
       console.log("PlotService : create() for project  " + createPlotDto.projectId);
-      let plotEntity = new Plot()
+      let plotEntity = new Plots()
       plotEntity.project=createPlotDto.projectId;
       plotEntity.season=createPlotDto.seasonId;
-      plotEntity.startDate=createPlotDto.startDate.toDateString();
-      plotEntity.endDate=createPlotDto.endDate.toDateString();
+      plotEntity.startDate=createPlotDto.startDate.toString();
+      plotEntity.endDate=createPlotDto.endDate.toString();
       
       await this.repository.save(plotEntity);
       return plotEntity.id;

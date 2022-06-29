@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectsModule } from './modules/projects/projects.module'
-import { PlotsModule } from './modules/plot/plot.module'
+import { PlotsModule } from './modules/plots/plots.module'
 
 
 @Module({

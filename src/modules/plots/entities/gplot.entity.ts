@@ -6,8 +6,8 @@ export class gPlot {
   id: number;
 
   @OneToOne(type => Projects) @JoinColumn()
-  gplotId: number;
+  project: number;
 
   @Column()
-  gplotName: string;
+  gplot_name: string;
 }

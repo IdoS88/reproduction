@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'ty
 import {Projects} from 'src/modules/projects/entities/projects.entity';
 import {GrowingSeason} from './growing_season.entity';
 @Entity()
-export class Plot {
+export class Plots {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -12,14 +12,14 @@ export class Plot {
   project: number;
 
   @Column()  // should be one many to one
-  crop_strainId: number;
+  crop_strain: number;
 
   @OneToOne(type => GrowingSeason) @JoinColumn()
   @Column()  // should be one many to one
   season: number;
 
   @Column()  // should be many to many to one
-  main_gplotId: number;
+  main_gplot: number;
 
   @Column({ type: 'date' })
   startDate: string;
