@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
-import {Project} from 'src/modules/project/entities/project.entity';
+import {Projects} from 'src/modules/projects/entities/projects.entity';
 import {GrowingSeason} from './growing_season.entity';
 @Entity()
 export class Plot {
@@ -7,7 +7,7 @@ export class Plot {
   id: number;
 
   
-  @OneToOne(type => Project) 
+  @OneToOne(type => Projects) 
   @JoinColumn()
   project: number;
 

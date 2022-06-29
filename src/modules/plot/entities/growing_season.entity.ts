@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany } from 'typeorm';
-import {Project} from 'src/modules/project/entities/project.entity';
+import {Projects} from 'src/modules/projects/entities/projects.entity';
 type NewType = string;
 
 @Entity()
@@ -7,7 +7,7 @@ export class GrowingSeason {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(type => Project) @JoinColumn()
+  @OneToOne(type => Projects) @JoinColumn()
   project: number;
 
   @Column()

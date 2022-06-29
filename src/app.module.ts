@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProjectsModule } from './modules/project/project.module'
+import { ProjectsModule } from './modules/projects/projects.module'
 import { PlotsModule } from './modules/plot/plot.module'
 
 
@@ -13,7 +13,7 @@ import { PlotsModule } from './modules/plot/plot.module'
       username: 'node',
       password: 'Geshem@2030',
       database: 'geshem_dev',
-      synchronize: true,
+      synchronize: false,  // false means do not auto create tables in DB
       logging: false,
       autoLoadEntities: true,
       cache : true,

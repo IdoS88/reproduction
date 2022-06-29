@@ -2,17 +2,17 @@ import { Injectable , HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 //import { DATABASE_CONNECTION_TOKEN } from '../../commons/db.constants';
-import { Project } from '../entities/project.entity';
-import { CreateProjectDTO, UpdateProjectDTO } from "../dto/project.dto";
+import { Projects } from '../entities/projects.entity';
+import { CreateProjectDTO, UpdateProjectDTO } from "../dto/projects.dto";
 //import { IProjectRepository } from "../data-access/project.repository";
 
 @Injectable()
-export class ProjectService {
+export class ProjectsService {
 
     // sivan: better practice to costraint the type of conn. not know yet to which interface
     constructor(
-        @InjectRepository(Project)
-        private projectRepository: Repository<Project>){
+        @InjectRepository(Projects)
+        private projectRepository: Repository<Projects>){
           console.log("on ProjectService constructor")
         };
     
@@ -20,13 +20,13 @@ export class ProjectService {
         return 'Hello Project!';
     }
     
-  getAll(): Promise<Project[]> {
+  getAll(): Promise<Projects[]> {
       console.log("project service : getAll()");
       return this.projectRepository.find();
     }
 
 
-  async getById(id: number): Promise<Project> {
+  async getById(id: number): Promise<Projects> {
       console.log("project service : getById() with project ID " + id);
       if (id <= 0)
         throw Error("project service : getById() id cannot be negative");
@@ -40,7 +40,7 @@ export class ProjectService {
 
   async create(createProjectDto: CreateProjectDTO) {
       console.log("project service : create() with project name " + createProjectDto.name );
-      let projectEntity = new Project()
+      let projectEntity = new Projects()
       //projectEntity.id=createProjectDto.id;
       projectEntity.name=createProjectDto.name;
       projectEntity.iconSrc=createProjectDto.iconSrc;
@@ -49,8 +49,8 @@ export class ProjectService {
       return projectEntity.id;
     }; 
 
-  async update(updateProjectDto: UpdateProjectDTO) {
-      console.log("project service : update()  project ID " + updateProjectDto.id + " not implemented yes");
+  async update(updateProjectsDto: UpdateProjectDTO) {
+      console.log("project service : update()  project ID " + updateProjectsDto.id + " not implemented yes");
       return -1;
     };
 

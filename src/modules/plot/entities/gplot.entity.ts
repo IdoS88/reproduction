@@ -1,11 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
-import {Project} from 'src/modules/project/entities/project.entity';
+import {Projects} from 'src/modules/projects/entities/projects.entity';
 @Entity()
 export class gPlot {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(type => Project) @JoinColumn()
+  @OneToOne(type => Projects) @JoinColumn()
   gplotId: number;
 
   @Column()
