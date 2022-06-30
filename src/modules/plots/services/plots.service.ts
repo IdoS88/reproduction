@@ -42,8 +42,8 @@ export class PlotsService {
       let plotEntity = new Plots()
       plotEntity.project=createPlotDto.projectId;
       plotEntity.season=createPlotDto.seasonId;
-      plotEntity.startDate=createPlotDto.startDate.toString();
-      plotEntity.endDate=createPlotDto.endDate.toString();
+      plotEntity.start_date=createPlotDto.startDate;
+      plotEntity.end_date=createPlotDto.endDate;
       
       await this.repository.save(plotEntity);
       return plotEntity.id;

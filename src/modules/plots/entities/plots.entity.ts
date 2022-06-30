@@ -12,18 +12,18 @@ export class Plots {
   project: number;
 
   @Column({nullable: true})  // should be one many to one
-  crop_strainId: number;
+  crop_strainid: number;
 
-  @OneToOne(type => GrowingSeason) @JoinColumn()
-  @Column()  // should be one many to one
+  @OneToOne(type => GrowingSeason) 
+  @JoinColumn()  // should be one many to one
   season: number;
 
   @Column()  // should be many to many to one
   main_gplot: number;
 
   @Column({ type: 'date' })
-  startDate: string;
+  start_date: Date;
   
   @Column({ type: 'date' })
-  endDate: string;
+  end_date: Date;
 }
