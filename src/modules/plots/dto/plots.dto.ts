@@ -1,3 +1,6 @@
+//sivan: TODO :
+// handle optionsl columns nullables
+
 export class CreatePlotDTO {
     projectId : number;
     crop_strainId : number;

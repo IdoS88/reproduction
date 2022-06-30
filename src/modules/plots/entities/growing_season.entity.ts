@@ -13,9 +13,9 @@ export class GrowingSeason {
   @Column()
   name: string;
 
-  @Column({ type: 'date' })
-  startDate: NewType;
+  @Column({ type: 'date', nullable: true })
+  start_date: Date;
   
-  @Column({ type: 'date' })
-  endDate: string;
+  @Column({ type: 'date', nullable: true })
+  end_date: Date;
 }

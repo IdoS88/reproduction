@@ -71,11 +71,31 @@ export class PlotController {
         let gprojObj = await this.gplotService.getById(gplotid);
         return res.status(HttpStatus.OK).json(gprojObj);
     }
-    @Post()
+    @Post('/gPlots')
     async createGPlot(@Body() createGPlotDto: CreateGPlotDTO) {
         const plot = await this.gplotService.create(createGPlotDto);
         return plot;
     }
 
+    // --- for growingSesion
+    @Get("/growing/all")
+    async GetAllGrowingSeason(@Res() res: Response) {
+        console.log("plot controller : GetAllGrowingSeason()");
+        let allObjects= await this.growingSeasonService.getAll();
 
+        return res.status(HttpStatus.OK).json(allObjects);
+    }
+
+    @Get('/growing/:id')
+    async GetGrowingSeasonById(@Param('id') growingSeasionId: number,
+                     @Res() res: Response) {
+        console.log("plot controller: get GetGrowingSeasonById " + growingSeasionId)
+        let growingjObj = await this.growingSeasonService.getById(growingSeasionId);
+        return res.status(HttpStatus.OK).json(growingjObj);
+    }
+    @Post('growing')
+    async createGrowingSeason(@Body() createGrowingSeasonDto: CreateGrowingSeasonDTO) {
+        const growingSeason = await this.growingSeasonService.create(createGrowingSeasonDto);
+        return growingSeason;
+    }
 }

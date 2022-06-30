@@ -38,7 +38,7 @@ export class PlotsService {
   };
   
   async create(createPlotDto: CreatePlotDTO) {
-      console.log("PlotService : create() for project  " + createPlotDto.projectId);
+      console.log("PlotService : create() for plot  " + createPlotDto.projectId);
       let plotEntity = new Plots()
       plotEntity.project=createPlotDto.projectId;
       plotEntity.season=createPlotDto.seasonId;

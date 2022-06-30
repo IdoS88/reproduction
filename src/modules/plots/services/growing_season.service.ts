@@ -38,11 +38,12 @@ export class GrowingSeasonService {
     };
 
   async create(createGrowingSeasonDto: CreateGrowingSeasonDTO) {
-      console.log("GrowingSeasonService : create() for session name " + createGrowingSeasonDto.name);
+      console.log("GrowingSeasonService : create() for season name " + createGrowingSeasonDto.name);
       let growingSeasonEntity = new GrowingSeason()
       growingSeasonEntity.name=createGrowingSeasonDto.name;
       growingSeasonEntity.project=createGrowingSeasonDto.projectId;
-      growingSeasonEntity.startDate=createGrowingSeasonDto.startDate.toDateString();
+      growingSeasonEntity.start_date=createGrowingSeasonDto.startDate;
+      growingSeasonEntity.end_date=createGrowingSeasonDto.endDate;
       
       await this.repository.save(growingSeasonEntity);
       return growingSeasonEntity.id;

@@ -11,8 +11,8 @@ export class Plots {
   @JoinColumn()
   project: number;
 
-  @Column()  // should be one many to one
-  crop_strain: number;
+  @Column({nullable: true})  // should be one many to one
+  crop_strainId: number;
 
   @OneToOne(type => GrowingSeason) @JoinColumn()
   @Column()  // should be one many to one
