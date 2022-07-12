@@ -29,18 +29,27 @@ export class gPlotService {
       console.log("gPlotService : getById() with plot ID " + id);
       if (id <= 0)
         throw Error("gPlotService : getById() id cannot be negative");
-
       return this.repository.findOne({
         where: {
           id: id,
         }
-      })
+      });
+    };
+
+  async getByProject(projectid: number): Promise<gPlot[]> {
+      console.log("gPlotService : getByProject() with project ID " + projectid);
+      if (projectid <= 0)
+        throw Error("gPlotService : getByProject() projectid should by positive integer");
+      return this.repository.find({
+        where: {  
+          projectId: projectid }
+      });
     };
   
   async create(createGPlotDto: CreateGPlotDTO) {
       console.log("gPlotService : create() with gplotName " + createGPlotDto.gplot_name);
       let gplotEntity = new gPlot()
-      gplotEntity.project=createGPlotDto.projectid;
+      gplotEntity.projectId=createGPlotDto.projectid;
       gplotEntity.gplot_name=createGPlotDto.gplot_name;
       
       await this.repository.save(gplotEntity);

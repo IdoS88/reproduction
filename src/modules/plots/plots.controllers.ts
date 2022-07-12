@@ -7,6 +7,7 @@ import { GrowingSeasonService } from "./services/growing_season.service";
 import { CreatePlotDTO } from "./dto/plots.dto";
 import { CreateGPlotDTO } from "./dto/gplot.dto";
 import { CreateGrowingSeasonDTO } from "./dto/growing_season.dto";
+import { Projects } from '../projects/entities/projects.entity';
 
 @Controller('Plots')
 export class PlotController {
@@ -64,13 +65,30 @@ export class PlotController {
         return res.status(HttpStatus.OK).json(allObjects);
     }
 
-    @Get('/gPlots/:id')
-    async GetGPlotById(@Param('id') gplotid: number,
-                     @Res() res: Response) {
-        console.log("plot controller: get GetGPlotById " + gplotid)
-        let gprojObj = await this.gplotService.getById(gplotid);
+    // sivan : I prefer to work with query - such the query structure define the process (get by ID or get by project),
+    //         instead the route path 
+    //         But query works only under empty GET() or if we use GET with path we can use only @Param
+    @Get('/gPlots/byID/:id')
+    async GetGPlotById(
+                    //@Query('id')  id: number ,  //   Plots/gPlots/?id=1
+                     @Param('id') id: number,
+                     @Res() res: Response) {               
+        console.log(`plot controller: my get GetGPlotById ${id}`)
+        let gprojObj = await this.gplotService.getById(id);
         return res.status(HttpStatus.OK).json(gprojObj);
     }
+    
+    
+    @Get('/gPlots/byProject/:projectid')
+    async GetGPlotByProject(
+                    @Param('projectid') projectid : number,
+                    //@Query() query: {'projectid': number},    //   Plots/gPlots/?projectid=1
+                    @Res() res: Response) {
+        console.log("plot controller: get getByProject ?{projectid}")
+        let gprojObjects = await this.gplotService.getByProject(projectid);
+        return res.status(HttpStatus.OK).json(gprojObjects);
+    }
+
     @Post('/gPlots')
     async createGPlot(@Body() createGPlotDto: CreateGPlotDTO) {
         const plot = await this.gplotService.create(createGPlotDto);

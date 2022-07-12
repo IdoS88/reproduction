@@ -9,7 +9,7 @@ import { ProjectsController } from './projects.controllers';
    // providers: [ProjectService, ...ProjectProviders],
     providers: [ProjectsService],
     controllers: [ProjectsController],
-    exports: [ProjectsService],
+    exports: [ProjectsService, TypeOrmModule],
   })
   export class ProjectsModule {}
 

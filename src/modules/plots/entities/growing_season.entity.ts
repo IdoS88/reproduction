@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany, BaseEntity } from 'typeorm';
 import {Projects} from 'src/modules/projects/entities/projects.entity';
 type NewType = string;
 
 @Entity()
-export class GrowingSeason {
+export class GrowingSeason extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
