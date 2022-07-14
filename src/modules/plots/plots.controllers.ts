@@ -9,20 +9,21 @@ import { CreateGPlotDTO } from "./dto/gplot.dto";
 import { CreateGrowingSeasonDTO } from "./dto/growing_season.dto";
 import { Projects } from '../projects/entities/projects.entity';
 
-@Controller('Plots')
+const plotPathes={
+    Plots :  'Plots',
+    gPlots: 'Plots/gPlots',
+    growing: 'Plots/growing'
+}
+@Controller(plotPathes.Plots)
 export class PlotController {
     //plotService : PlotService;
 
-    constructor(private plotsService :PlotsService,
-                private gplotService :gPlotService,
-                private growingSeasonService:GrowingSeasonService) {};
+    constructor(private plotsService :PlotsService) {};
 
     @Get("/hello")
     async helloPlot()  {
        let hellowAll : string; 
-       hellowAll = await this.plotsService.getHello() + "\n" +
-                await this.gplotService.getHello() + "\n" +
-               await this.growingSeasonService.getHello()
+       hellowAll = await this.plotsService.getHello() 
        return hellowAll;
     }
 
@@ -35,11 +36,28 @@ export class PlotController {
         return res.status(HttpStatus.OK).json(allObjects);
     }
 
-    @Get('/:id')
-    async GetPlotById(@Param('id') plotid: number,
-                     @Res() res: Response) {
+    // @Get('/:id')
+    // async GetPlotById(@Param('id') plotid: number,
+    //                  @Res() res: Response) {
+    //     console.log("Plot controller: get GetPlotById " + plotid)
+    //     let projObj = await this.plotsService.getById(plotid);
+    //     return res.status(HttpStatus.OK).json(projObj);
+    // }
+
+    @Get('/id/')
+    async GetPlotById(@Query('id') plotid: number,
+                      @Res() res: Response) {
         console.log("Plot controller: get GetPlotById " + plotid)
         let projObj = await this.plotsService.getById(plotid);
+        return res.status(HttpStatus.OK).json(projObj);
+    }
+
+    @Get('/project/')
+    async GetPlotByProject(
+        @Query() query : {'projectid': number},    //   Plots/gPlots/?projectid=1
+        @Res() res: Response) {
+        console.log("Plot controller: get GetPlotByProject " + query.projectid)
+        let projObj = await this.plotsService.getByProject(query.projectid);
         return res.status(HttpStatus.OK).json(projObj);
     }
 
@@ -55,9 +73,20 @@ export class PlotController {
         const plots = await this.plotsService.delete(plotid);
         return plots;
     }
+}
 
+@Controller(plotPathes.gPlots)
+export class gPlotController {
+    constructor(private gplotService :gPlotService) {};
+   
+    @Get("/hello")
+    async helloPlot()  {
+       let hellowAll : string; 
+       hellowAll = await this.gplotService.getHello() 
+       return hellowAll;
+    }
     // --- for gPlot
-    @Get("/gPlots/all")
+    @Get("/all")
     async GetAllgPlots(@Res() res: Response) {
         console.log("plot controller : GetAllgPlots()");
         let allObjects= await this.gplotService.getAll();
@@ -68,35 +97,57 @@ export class PlotController {
     // sivan : I prefer to work with query - such the query structure define the process (get by ID or get by project),
     //         instead the route path 
     //         But query works only under empty GET() or if we use GET with path we can use only @Param
-    @Get('/gPlots/byID/:id')
+    @Get()
     async GetGPlotById(
-                    //@Query('id')  id: number ,  //   Plots/gPlots/?id=1
-                     @Param('id') id: number,
+                    @Query('id')  id: number ,  //   Plots/gPlots/?id=1
+                    // @Param('id') id: number,
                      @Res() res: Response) {               
         console.log(`plot controller: my get GetGPlotById ${id}`)
         let gprojObj = await this.gplotService.getById(id);
         return res.status(HttpStatus.OK).json(gprojObj);
-    }
+    };
     
+    // @Get('/gPlots/Q')
+    // async GetGPlotByIdQ(
+    //                 @Query()  gPlotQuery: {id: number},  //   Plots/gPlots/?id=1
+    //                 // @Param('id') id: number,
+    //                  @Res() res: Response) {               
+    //     console.log(`plot controller: my get GetGPlotById ${gPlotQuery.id}`)
+    //     let gprojObj = await this.gplotService.getById(gPlotQuery.id);
+    //     return res.status(HttpStatus.OK).json(gprojObj);
+    // }
     
-    @Get('/gPlots/byProject/:projectid')
+    @Get()
     async GetGPlotByProject(
-                    @Param('projectid') projectid : number,
-                    //@Query() query: {'projectid': number},    //   Plots/gPlots/?projectid=1
+                    //@Param('projectid') projectid : number,
+                    @Query() query: {'projectid': number},    //   Plots/gPlots/?projectid=1
                     @Res() res: Response) {
-        console.log("plot controller: get getByProject ?{projectid}")
-        let gprojObjects = await this.gplotService.getByProject(projectid);
+        console.log("plot controller: get getByProject ?{query.projectid}")
+        let gprojObjects = await this.gplotService.getByProject(query.projectid);
         return res.status(HttpStatus.OK).json(gprojObjects);
     }
 
-    @Post('/gPlots')
+    @Post()
     async createGPlot(@Body() createGPlotDto: CreateGPlotDTO) {
         const plot = await this.gplotService.create(createGPlotDto);
         return plot;
     }
+}
+
+@Controller(plotPathes.growing)
+export class growingController {
+
+    constructor(private growingSeasonService:GrowingSeasonService) {};
+
+    @Get("/hello")
+    async helloPlot()  {
+       let hellowAll : string; 
+       hellowAll = await this.growingSeasonService.getHello() 
+       return hellowAll;
+    }
 
     // --- for growingSesion
-    @Get("/growing/all")
+    @Get("/all")
     async GetAllGrowingSeason(@Res() res: Response) {
         console.log("plot controller : GetAllGrowingSeason()");
         let allObjects= await this.growingSeasonService.getAll();
@@ -104,14 +155,14 @@ export class PlotController {
         return res.status(HttpStatus.OK).json(allObjects);
     }
 
-    @Get('/growing/:id')
+    @Get('/:id')
     async GetGrowingSeasonById(@Param('id') growingSeasionId: number,
                      @Res() res: Response) {
         console.log("plot controller: get GetGrowingSeasonById " + growingSeasionId)
         let growingjObj = await this.growingSeasonService.getById(growingSeasionId);
         return res.status(HttpStatus.OK).json(growingjObj);
     }
-    @Post('growing')
+    @Post()
     async createGrowingSeason(@Body() createGrowingSeasonDto: CreateGrowingSeasonDTO) {
         const growingSeason = await this.growingSeasonService.create(createGrowingSeasonDto);
         return growingSeason;

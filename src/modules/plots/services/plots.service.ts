@@ -37,10 +37,31 @@ export class PlotsService {
     })
   };
   
+  async getByProject(projectid: number): Promise<Plots[]> {
+    console.log("PlotService : getByProject() for project " + projectid);
+    if (projectid <= 0)
+        throw Error("PlotService : getByProject() id cannot be negative");
+
+      return this.repository.find({
+        where: {
+          projectId: projectid,
+        }
+    })
+  };
+  // async getByConstraints(projectid: number): Promise<gPlot[]> {
+  //   console.log("gPlotService : getByProject() with project ID " + projectid);
+  //   if (projectid <= 0)
+  //     throw Error("gPlotService : getByProject() projectid should by positive integer");
+  //   return this.repository.find({
+  //     where: {  
+  //       projectId: projectid }
+  //   });
+  // };
+
   async create(createPlotDto: CreatePlotDTO) {
       console.log("PlotService : create() for plot  " + createPlotDto.projectId);
       let plotEntity = new Plots()
-      plotEntity.project=createPlotDto.projectId;
+      plotEntity.projectId=createPlotDto.projectId;
       plotEntity.season=createPlotDto.seasonId;
       plotEntity.start_date=createPlotDto.startDate;
       plotEntity.end_date=createPlotDto.endDate;

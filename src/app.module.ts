@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectsModule } from './modules/projects/projects.module'
 import { PlotsModule } from './modules/plots/plots.module'
+import { CropsModule } from './modules/crops/crops.module'
 
 
 @Module({
@@ -19,7 +20,8 @@ import { PlotsModule } from './modules/plots/plots.module'
       cache : true,
     }),
     ProjectsModule ,
-    PlotsModule
+    PlotsModule,
+    CropsModule
   ],
   controllers: [],
   providers: []

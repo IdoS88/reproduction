@@ -6,13 +6,13 @@ import { GrowingSeason } from './entities/growing_season.entity';
 import { PlotsService } from './services/plots.service';
 import { gPlotService } from './services/gplot.service';
 import { GrowingSeasonService } from './services/growing_season.service';
-import { PlotController } from './plots.controllers';
+import { PlotController,gPlotController, growingController } from './plots.controllers';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Plots, gPlot, GrowingSeason])],
    // providers: [ProjectService, ...ProjectProviders],
     providers: [gPlotService, PlotsService, GrowingSeasonService],
-    controllers: [PlotController],
+    controllers: [PlotController, gPlotController, growingController ],
     exports: [gPlotService, PlotsService, GrowingSeasonService],
   })
   export class PlotsModule {}

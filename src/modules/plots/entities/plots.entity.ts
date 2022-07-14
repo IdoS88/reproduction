@@ -1,17 +1,22 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn,BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, JoinColumn,BaseEntity } from 'typeorm';
 import {Projects} from 'src/modules/projects/entities/projects.entity';
+import {CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
+
 import {GrowingSeason} from './growing_season.entity';
 @Entity()
 export class Plots extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(type => Projects) 
-  @JoinColumn()
-  project: number;
+  @Column()  projectId: number;
+  @OneToMany(type => Projects, projectid=>Projects.getId)
+  @JoinColumn({name: "projectId" })
+  project: Projects;
   
-  @Column({nullable: true})  // should be one many to one
-  crop_strainid: number;
+  @Column()  crop_strainid: number;
+  @OneToMany(type => CropsStrain, crop_strainid=>CropsStrain.getId, { nullable: true }) 
+  @JoinColumn({name: "crop_strainid" })  // should be one many to one
+  cropStrain: CropsStrain;
 
   @OneToOne(type => GrowingSeason) 
   @JoinColumn()  // should be one many to one
