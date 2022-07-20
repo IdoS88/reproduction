@@ -2,9 +2,11 @@ import { Controller , Res, Get, Param, Post, Body, Delete, Query, HttpStatus} fr
 import { Response } from 'express';
 import { Request } from 'express';
 import { ProjectsService } from "./services/projects.service";
-import { CreateProjectDTO } from "./dto/projects.dto";
+import { CreateProjectDTO, UpdateProjectDTO } from "./dto/projects.dto";
 import { resolve } from 'path';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Projects')
 @Controller('Projects')
 export class ProjectsController {
     //projectService : ProjectService;
@@ -16,7 +18,7 @@ export class ProjectsController {
        return await this.projectsService.getHello();
     }
 
-    @Get("/all")
+    @Get()
     async GetAllProjects(@Res() res: Response) {
         console.log("project controller : GetAllProjects()");
         let allObjects= await this.projectsService.getAll();
@@ -33,13 +35,23 @@ export class ProjectsController {
         return res.status(HttpStatus.OK).json(projObj);
     }
 
-    @Post()
+    @Post('/new/')
+    @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
+    @ApiResponse({ status: 403, description: 'Forbidden.'})
     async create(@Body() createProjectDto: CreateProjectDTO) {
         const project = await this.projectsService.create(createProjectDto);
         return project;
     }
 
-    @Delete()
+    @Post('/update/')
+    @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
+    @ApiResponse({ status: 403, description: 'Forbidden.'})
+    async update(@Body() updateProjectDto: UpdateProjectDTO) {
+        const project = await this.projectsService.create(updateProjectDto);
+        return project;
+    }
+
+    @Delete(':id')
     async delete(@Param('id') projectid: number) {
         const projects = await this.projectsService.delete(projectid);
         return projects;

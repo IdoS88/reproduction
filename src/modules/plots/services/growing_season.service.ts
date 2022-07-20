@@ -35,13 +35,25 @@ export class GrowingSeasonService {
           id: id,
         }
       })
-    };
+  };
+
+  async getByProject(projectid: number): Promise<GrowingSeason[]> {
+    console.log("GrowingSeasonService : getByProjectId() with project " + projectid);
+    if (projectid <= 0)
+      throw Error("GrowingSeasonService : getByProjectId() id cannot be negative");
+
+    return this.repository.find({
+      where: {
+        projectId: projectid,
+      }
+    })
+  };
 
   async create(createGrowingSeasonDto: CreateGrowingSeasonDTO) {
       console.log("GrowingSeasonService : create() for season name " + createGrowingSeasonDto.name);
       let growingSeasonEntity = new GrowingSeason()
       growingSeasonEntity.name=createGrowingSeasonDto.name;
-      growingSeasonEntity.project=createGrowingSeasonDto.projectId;
+      growingSeasonEntity.projectId=createGrowingSeasonDto.projectId;
       growingSeasonEntity.start_date=createGrowingSeasonDto.startDate;
       growingSeasonEntity.end_date=createGrowingSeasonDto.endDate;
       

@@ -56,13 +56,13 @@ export class gPlotService {
       return gplotEntity.id;
     }; 
 
-  async update(updatePlotDto:UpdateGPlotDTO) {
-      console.log("plot service : update()  plot ID " + updatePlotDto.id + " not implemented yes");
+  async update(updateGPlotDto:UpdateGPlotDTO) {
+      console.log("gplot service : update()  gplot ID " + updateGPlotDto.id + " not implemented yes");
       return -1;
     };
 
   async delete(id: number) {
-      console.log("plot service : delete()  plot ID " + id + " not implemented yes");
+      console.log("gplot service : delete()  gplot ID " + id + " not implemented yes");
       return null;
     };
 }

@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity } from 't
 
 @Entity()
 export class Projects extends BaseEntity{
+  
   @PrimaryGeneratedColumn()
   id: number;
 
