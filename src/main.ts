@@ -15,7 +15,7 @@ async function bootstrap() {
     .setTitle('GESHEM openAPI documentation')
     .setDescription(' TODO description')
     .setVersion('1.0')
-    .addTag('projects', 'plots')
+    //.addTag('crops','projects', 'plots')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

@@ -4,7 +4,7 @@ import { UpdateCropsKindDto } from '../dto/update-cropsKind.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CropsKind } from '../entities/cropsKind.entity';
-import { Crop } from '../entities/crop.entity';
+import { Crops } from '../entities/crop.entity';
 import { CropsStrain } from '../entities/cropsStrain.entity';
 
 

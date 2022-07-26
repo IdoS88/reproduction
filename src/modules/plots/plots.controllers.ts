@@ -1,4 +1,4 @@
-import { Controller , Res, Get, Param, Post, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe} from '@nestjs/common';
+import { Controller , Get, Post, Put, Res,  Param, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe} from '@nestjs/common';
 import { Response } from 'express';
 import { PlotsService } from "./services/plots.service";
 import { gPlotService } from "./services/gplot.service";
@@ -75,7 +75,7 @@ export class PlotController {
     } */
 
 
-    @Post('new')
+    @Post()
     @UsePipes(new ValidationPipe({ transform: true }))
     async createPlot(@Body() createPlotDto: CreatePlotDTO) {
         console.log("Plot controller:createPlot ")
@@ -83,7 +83,7 @@ export class PlotController {
         return plot;
     }
 
-    @Post('update')
+    @Put()
     @UsePipes(new ValidationPipe({ transform: true }))
     async updatePlot(@Body() updatePlotDto: UpdatePlotDTO) {
         console.log("Plot controller: updatePlot ")
@@ -151,7 +151,7 @@ export class gPlotController {
         return res.status(HttpStatus.OK).json(gprojObjects);
     }
 
-    @Post('new')
+    @Post()
     @UsePipes(new ValidationPipe({ transform: true }))
     async createGPlot(@Body() createGPlotDto: CreateGPlotDTO) {
         console.log("gPlotController: updatePlot ")
@@ -159,7 +159,7 @@ export class gPlotController {
         return plot;
     }
 
-    @Post('update')
+    @Put()
     @UsePipes(new ValidationPipe({ transform: true }))
     async updategPlot(@Body() updateGPlotDto: UpdateGPlotDTO) {
         console.log("gPlotController: updategPlot ")
@@ -208,7 +208,7 @@ export class growingController {
         return res.status(HttpStatus.OK).json(growingObjects);
     }
 
-    @Post('new')
+    @Post()
     @UsePipes(new ValidationPipe({ transform: true }))
     async createGrowingSeason(@Body() createGrowingSeasonDto: CreateGrowingSeasonDTO) {
         console.log("GrowingSeason controller: createGrowingSeason " + createGrowingSeasonDto.projectId)
@@ -216,7 +216,7 @@ export class growingController {
         return growingSeason;
     }
 
-    @Post('update')
+    @Put()
     @UsePipes(new ValidationPipe({ transform: true }))
     async updateGrowingSeason(@Body() updateGrowingSeasonDto: UpdateGrowingSeasonDTO): Promise<number> {
         console.log("GrowingSeason controller: updateGrowingSeason ")

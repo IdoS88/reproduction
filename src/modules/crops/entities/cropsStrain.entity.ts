@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn,BaseEntity } from 'typeorm';
-import { Crop } from './crop.entity';
+import { Crops } from './crop.entity';
 
 @Entity()
 export class CropsStrain extends BaseEntity{
@@ -14,7 +14,7 @@ export class CropsStrain extends BaseEntity{
 
     @Column()
     cropId: number;
-    @ManyToOne(() => Crop, crop => crop.strain)
+    @ManyToOne(() => Crops, crop => crop.strain)
     @JoinColumn({ name: "cropId" })
-    crop: Crop;
+    crop: Crops;
 }

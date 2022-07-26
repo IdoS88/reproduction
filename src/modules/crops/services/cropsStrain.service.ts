@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CropsStrain } from '../entities/cropsStrain.entity';
 import { CropsService } from './crops.service';
-import { Crop } from '../entities/crop.entity';
+import { Crops } from '../entities/crop.entity';
 
 
 @Injectable()
@@ -43,7 +43,7 @@ export class CropsStrainService {
       throw Error("CropsKind id cannot be negative");
     return await this.cropsStrainRepository.createQueryBuilder('cs')
       .select('cs') //(['cs.id', 'cs.name', 'cs.color', 'cs.cropId'])
-      .leftJoin(Crop, "c", "c.id = cs.cropId")
+      .leftJoin(Crops, "c", "c.id = cs.cropId")
       .where('c.kindId = :ckid', { ckid: cropkindid})
       .getMany();
   }

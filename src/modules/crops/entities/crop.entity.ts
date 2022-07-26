@@ -3,7 +3,7 @@ import { CropsKind } from './cropsKind.entity';
 import { CropsStrain } from './cropsStrain.entity';
 
 @Entity()
-export class Crop extends BaseEntity{
+export class Crops extends BaseEntity{
     @PrimaryGeneratedColumn()
     id: number;
 

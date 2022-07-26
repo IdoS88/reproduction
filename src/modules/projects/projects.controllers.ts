@@ -1,4 +1,4 @@
-import { Controller , Res, Get, Param, Post, Body, Delete, Query, HttpStatus} from '@nestjs/common';
+import { Controller , Get, Post, Put, Res, Param, Body, Delete, Query, HttpStatus} from '@nestjs/common';
 import { Response } from 'express';
 import { Request } from 'express';
 import { ProjectsService } from "./services/projects.service";
@@ -35,7 +35,7 @@ export class ProjectsController {
         return res.status(HttpStatus.OK).json(projObj);
     }
 
-    @Post('/new/')
+    @Post()
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     async create(@Body() createProjectDto: CreateProjectDTO) {
@@ -43,7 +43,7 @@ export class ProjectsController {
         return project;
     }
 
-    @Post('/update/')
+    @Put()
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     async update(@Body() updateProjectDto: UpdateProjectDTO) {

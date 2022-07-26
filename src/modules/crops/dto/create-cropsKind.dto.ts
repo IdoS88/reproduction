@@ -1,5 +1,6 @@
-import { CropsKind } from '../entities/cropsKind.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCropsKindDto {
+    @ApiProperty()
     name: string;
 }

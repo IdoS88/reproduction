@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Crop } from './crop.entity';
+import { Crops } from './crop.entity';
 
 @Entity()
 export class CropsKind {
@@ -9,6 +9,6 @@ export class CropsKind {
     @Column()
     name: string;
 
-    @OneToMany(type => Crop, crop => crop.kind)
-    crops: Crop[];
+    @OneToMany(type => Crops, crop => crop.kind)
+    crops: Crops[];
 }
