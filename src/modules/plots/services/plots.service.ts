@@ -70,8 +70,9 @@ export class PlotsService {
       return plotEntity.id;
     }; 
 
-  async update(updatePlotDto: UpdatePlotDTO) {
-      console.log("PlotService : update()  ID " + updatePlotDto.id + " not implemented yes");
+  async update(id: number, 
+    updatePlotDto: UpdatePlotDTO) {
+      console.log("PlotService : update()  ID " + id + " not implemented yes");
       return -1;
   };
 

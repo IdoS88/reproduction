@@ -6,11 +6,7 @@ import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, IsOptional } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 
-class plotDTO {
-    @ApiProperty()
-    @IsNotEmpty() 
-    id : number;
-
+export class CreatePlotDTO {
     @ApiProperty()
     @IsNotEmpty() 
     projectId : number;
@@ -31,8 +27,8 @@ class plotDTO {
     @ApiProperty()
     endDate: Date;
 }
-export class CreatePlotDTO extends OmitType(plotDTO,['id'] as const){};
-export class UpdatePlotDTO extends PartialType(plotDTO){};
+
+export class UpdatePlotDTO extends PartialType(CreatePlotDTO){};
 
 export class FilterPlotQueryDTO{
     @ApiProperty()

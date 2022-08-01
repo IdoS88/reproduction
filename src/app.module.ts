@@ -3,7 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectsModule } from './modules/projects/projects.module'
 import { PlotsModule } from './modules/plots/plots.module'
 import { CropsModule } from './modules/crops/crops.module'
-
+import { WorkersToolsModule } from './modules/workers/workers.module';
+import { UnitsModule } from './modules/units/units.module';
 
 @Module({
   imports: [
@@ -21,7 +22,9 @@ import { CropsModule } from './modules/crops/crops.module'
     }),
     ProjectsModule ,
     PlotsModule,
-    CropsModule
+    CropsModule,
+    UnitsModule,
+    WorkersToolsModule
   ],
   controllers: [],
   providers: []

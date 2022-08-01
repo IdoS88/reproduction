@@ -1,13 +1,13 @@
-import { Controller , Get, Post, Put, Res,  Param, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe} from '@nestjs/common';
+import { Controller , Get, Post, Put, Res,  Param, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe, Patch} from '@nestjs/common';
 import { Response } from 'express';
 import { PlotsService } from "./services/plots.service";
 import { gPlotService } from "./services/gplot.service";
 import { GrowingSeasonService } from "./services/growing_season.service";
 import { CreatePlotDTO , FilterPlotQueryDTO, UpdatePlotDTO} from "./dto/plots.dto";
-import { CreateGPlotDTO, UpdateGPlotDTO } from "./dto/gplot.dto";
+import { UpdateGPlotDTO,  CreateGPlotDTO } from "./dto/gplot.dto";
 import { CreateGrowingSeasonDTO, UpdateGrowingSeasonDTO } from "./dto/growing_season.dto";
 import { Projects } from '../projects/entities/projects.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 const plotPathes={
     Plots :  'Plots',
@@ -83,17 +83,20 @@ export class PlotController {
         return plot;
     }
 
-    @Put()
+    @Patch('/:id')
     @UsePipes(new ValidationPipe({ transform: true }))
-    async updatePlot(@Body() updatePlotDto: UpdatePlotDTO) {
+    @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
+    @ApiResponse({ status: 403, description: 'Forbidden.'})
+    async updatePlot(@Param('id') id: number,
+        @Body() updatePlotDto: UpdatePlotDTO) {
         console.log("Plot controller: updatePlot ")
-        const plot = await this.plotsService.update(updatePlotDto);
+        const plot = await this.plotsService.update(id, updatePlotDto);
         return plot;
     }
 
     @Delete(':id')
-    async deletePlot(@Param('id') plotid: number) {
-        const plots = await this.plotsService.delete(plotid);
+    async deletePlot(@Param('id') id: number) {
+        const plots = await this.plotsService.delete(id);
         return plots;
     }
 }
@@ -159,11 +162,14 @@ export class gPlotController {
         return plot;
     }
 
-    @Put()
+    @Patch('/:id')
     @UsePipes(new ValidationPipe({ transform: true }))
-    async updategPlot(@Body() updateGPlotDto: UpdateGPlotDTO) {
+    @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
+    @ApiResponse({ status: 403, description: 'Forbidden.'})
+    async updategPlot(@Param('id') id: number,
+        @Body() updateGPlotDto: UpdateGPlotDTO) {
         console.log("gPlotController: updategPlot ")
-        const plot = await this.gplotService.update(updateGPlotDto);
+        const plot = await this.gplotService.update(id, updateGPlotDto);
         return plot;
     }
 }
@@ -218,9 +224,12 @@ export class growingController {
 
     @Put()
     @UsePipes(new ValidationPipe({ transform: true }))
-    async updateGrowingSeason(@Body() updateGrowingSeasonDto: UpdateGrowingSeasonDTO): Promise<number> {
+    @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
+    @ApiResponse({ status: 403, description: 'Forbidden.'})
+    async updateGrowingSeason(@Param('id') id: number,
+        @Body() updateGrowingSeasonDto: UpdateGrowingSeasonDTO): Promise<number> {
         console.log("GrowingSeason controller: updateGrowingSeason ")
-        const plot = await this.growingSeasonService.update(updateGrowingSeasonDto);
+        const plot = await this.growingSeasonService.update(id, updateGrowingSeasonDto);
         return plot;
     }
 

@@ -49,8 +49,10 @@ export class ProjectsService {
       return projectEntity.id;
     }; 
 
-  async update(updateProjectsDto: UpdateProjectDTO) {
-      console.log("project service : update()  project ID " + updateProjectsDto.id + " not implemented yes");
+  async update(id: number, 
+               updateProjectsDto: UpdateProjectDTO) {
+      console.log("project service : update()  project ID " + id + " not implemented yes");
+      await this.projectRepository.update(id, updateProjectsDto);
       return -1;
     };
 

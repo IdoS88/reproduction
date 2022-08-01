@@ -61,8 +61,9 @@ export class GrowingSeasonService {
       return growingSeasonEntity.id;
     }; 
 
-  async update(updateGrowingSeasonDto: UpdateGrowingSeasonDTO) {
-      console.log("GrowingSeasonService: update()  ID " + updateGrowingSeasonDto.id + " not implemented yes");
+  async update(id: number,
+               updateGrowingSeasonDto: UpdateGrowingSeasonDTO) {
+      console.log("GrowingSeasonService: update()  ID " + id + " not implemented yes");
       return -1;
     };
 

@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { WorkersService } from './services/workers.service';
 import { ToolsService } from './services/tools.service';
 import { TypesService } from './services/types.service';
-import { CreateWorkerDto } from './dto/create-worker.dto';
-import { CreateToolDto } from './dto/create-tool.dto';
-import { CreateTypeDto } from './dto/create-type.dto';
+import { CreateWorkerDto } from './dto/workers.dto';
+import { CreateToolDto } from './dto/tools.dto';
+import { CreateTypeDto } from './dto/type.dto';
 
 @Controller('workers')
 export class WorkersController {
@@ -23,6 +23,11 @@ export class WorkersController {
   @Get(':id')
   getWorkerById(@Param('id') id: number) {
     return this.workersService.getWorkerById(id);
+  }
+
+  @Get('bytype/:id')
+  getAllWorkersByTypeId(@Param('id') id: number) {
+    return this.workersService.getAllWorkersByTypeId(id);
   }
 }
 
@@ -43,6 +48,11 @@ export class ToolsController {
   @Get(':id')
   getToolById(@Param('id') id: number) {
     return this.toolsService.getToolById(id);
+  }
+
+  @Get('bytype/:id')
+  getAllWorkersByTypeId(@Param('id') id: number) {
+    return this.toolsService.getAllToolsByType(id);
   }
 }
 

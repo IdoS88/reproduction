@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 //import { DATABASE_CONNECTION_TOKEN } from '../../commons/db.constants';
 import { gPlot } from '../entities/gplot.entity';
-import { CreateGPlotDTO , UpdateGPlotDTO} from "../dto/gplot.dto";
+import {UpdateGPlotDTO, CreateGPlotDTO} from "../dto/gplot.dto";
 
 @Injectable()
 export class gPlotService {
@@ -19,7 +19,7 @@ export class gPlotService {
         return 'Hello gPlot!';
     }
     
-  getAll(): Promise<gPlot[]> {
+  async getAll(): Promise<gPlot[]> {
       console.log("gPlotService : getAll()");
       return this.repository.find();
     }
@@ -56,8 +56,9 @@ export class gPlotService {
       return gplotEntity.id;
     }; 
 
-  async update(updateGPlotDto:UpdateGPlotDTO) {
-      console.log("gplot service : update()  gplot ID " + updateGPlotDto.id + " not implemented yes");
+   async update(id: number,
+                updateGPlotDto:UpdateGPlotDTO) {
+      console.log("gplot service : update()  gplot ID " + id + " not implemented yes");
       return -1;
     };
 

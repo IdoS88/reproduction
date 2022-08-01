@@ -1,9 +1,7 @@
-import { Controller , Get, Post, Put, Res, Param, Body, Delete, Query, HttpStatus} from '@nestjs/common';
+import { Controller , Get, Post, Patch, Res, Param, Body, Delete, Query, HttpStatus} from '@nestjs/common';
 import { Response } from 'express';
-import { Request } from 'express';
 import { ProjectsService } from "./services/projects.service";
 import { CreateProjectDTO, UpdateProjectDTO } from "./dto/projects.dto";
-import { resolve } from 'path';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Projects')
@@ -38,16 +36,17 @@ export class ProjectsController {
     @Post()
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
-    async create(@Body() createProjectDto: CreateProjectDTO) {
+    async create(@Body() createProjectDto: CreateProjectDTO): Promise<number> {
         const project = await this.projectsService.create(createProjectDto);
         return project;
     }
 
-    @Put()
+    @Patch('/:id')
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
-    async update(@Body() updateProjectDto: UpdateProjectDTO) {
-        const project = await this.projectsService.create(updateProjectDto);
+    async update(@Param('id') id: number,
+                 @Body() updateProjectDto: UpdateProjectDTO) {
+        const project = await this.projectsService.update(id, updateProjectDto);
         return project;
     }
 
