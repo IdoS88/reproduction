@@ -44,6 +44,7 @@ export class ProjectsController {
     @Patch('/:id')
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
+    @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
     async update(@Param('id') id: number,
                  @Body() updateProjectDto: UpdateProjectDTO) {
         const project = await this.projectsService.update(id, updateProjectDto);
@@ -51,6 +52,7 @@ export class ProjectsController {
     }
 
     @Delete(':id')
+    @ApiResponse({ status: 532, description: 'delete functionality not implemented.'})
     async delete(@Param('id') projectid: number) {
         const projects = await this.projectsService.delete(projectid);
         return projects;

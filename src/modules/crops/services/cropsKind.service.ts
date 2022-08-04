@@ -35,5 +35,17 @@ export class CropsKindService {
       }
     });
   }
-  
+
+  async update(
+    id: number, 
+    updateCropsKindDto: UpdateCropsKindDto) {
+      console.log('cropsKindRepository : update()  cropKind ${id}  not implemented yet');
+      return -1;
+  };
+
+  async delete(
+    id: number): Promise<any> {
+      console.log('cropsKindRepository : delete()  cropKind ${id} not implemented yet');
+      return null;
+  };
 }

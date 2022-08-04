@@ -46,11 +46,16 @@ export class CropsService {
     });
   }
 
-  // update(id: number, updateCropDto: UpdateCropDto) {
-  //   return `This action updates a #${id} crop`;
-  // }
+  async update(
+    id: number, 
+    updateCropDto: UpdateCropDto) {
+      console.log('cropsKindRepository : update()  cropKind ${id}  not implemented yet');
+      return -1;
+  };
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} crop`;
-  // }
+  async delete(
+    id: number): Promise<any> {
+      console.log('cropsKindRepository : delete()  cropKind ${id} not implemented yet');
+      return null;
+  };
 }

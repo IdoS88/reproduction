@@ -1,77 +1,90 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WorkersService } from './services/workers.service';
 import { ToolsService } from './services/tools.service';
 import { TypesService } from './services/types.service';
 import { CreateWorkerDto } from './dto/workers.dto';
 import { CreateToolDto } from './dto/tools.dto';
 import { CreateTypeDto } from './dto/type.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Workers')
 @Controller('workers')
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
   @Post()
-  create(@Body() createWorkerDto: CreateWorkerDto) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
+  @ApiResponse({ status: 403, description: 'Forbidden.'})
+  async create(@Body() createWorkerDto: CreateWorkerDto) {
     return this.workersService.create(createWorkerDto);
   }
 
   @Get()
-  getAll() {
+  async getAll() {
     return this.workersService.getAll();
   }
 
   @Get(':id')
-  getWorkerById(@Param('id') id: number) {
+  async getWorkerById(@Param('id') id: number) {
     return this.workersService.getWorkerById(id);
   }
 
   @Get('bytype/:id')
-  getAllWorkersByTypeId(@Param('id') id: number) {
+  async getAllWorkersByTypeId(@Param('id') id: number) {
     return this.workersService.getAllWorkersByTypeId(id);
   }
 }
 
+@ApiTags('Tools')
 @Controller('tools')
 export class ToolsController {
   constructor(private readonly toolsService: ToolsService) {}
 
   @Post()
-  create(@Body() createToolDto: CreateToolDto) {
-    return this.toolsService.create(createToolDto);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
+  @ApiResponse({ status: 403, description: 'Forbidden.'})
+  async create(@Body() createToolDto: CreateToolDto): Promise<number> {
+    return await this.toolsService.create(createToolDto);
   }
 
   @Get()
-  getAll() {
-    return this.toolsService.getAll();
+  async getAll() {
+    return await this.toolsService.getAll();
   }
 
   @Get(':id')
-  getToolById(@Param('id') id: number) {
-    return this.toolsService.getToolById(id);
+  async getToolById(@Param('id') id: number) {
+    return await this.toolsService.getToolById(id);
   }
 
   @Get('bytype/:id')
-  getAllWorkersByTypeId(@Param('id') id: number) {
-    return this.toolsService.getAllToolsByType(id);
+  async getAllWorkersByTypeId(@Param('id') id: number) {
+    return await this.toolsService.getAllToolsByType(id);
   }
 }
 
+@ApiTags('Types')
 @Controller('types')
 export class TypesController {
   constructor(private readonly typesService: TypesService) {}
 
   @Post()
-  create(@Body() createTypeDto: CreateTypeDto) {
-    return this.typesService.create(createTypeDto);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
+  @ApiResponse({ status: 403, description: 'Forbidden.'})
+  async create(@Body() createTypeDto: CreateTypeDto): Promise<number> {
+    return await this.typesService.create(createTypeDto);
   }
 
   @Get()
-  getAll() {
-    return this.typesService.getAll();
+  async getAll() {
+    return await this.typesService.getAll();
   }
 
   @Get(':id')
-  getTypeById(@Param('id') id: number) {
-    return this.typesService.getTypeById(id);
+  async getTypeById(@Param('id') id: number) {
+    return await this.typesService.getTypeById(id);
   }
 }

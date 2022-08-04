@@ -47,4 +47,17 @@ export class CropsStrainService {
       .where('c.kindId = :ckid', { ckid: cropkindid})
       .getMany();
   }
+
+  async update(
+    id: number,
+    updateCropsStrainDto: UpdateCropsStrainDto) {
+      console.log('cropsStrainRepository : update()  cropStrain ${id}  not implemented yet');
+      return -1;
+  };
+
+  async delete(
+    id: number): Promise<any> {
+      console.log('cropsStrainRepository : delete()  cropStrain ${id} not implemented yet');
+      return null;
+  };
 }

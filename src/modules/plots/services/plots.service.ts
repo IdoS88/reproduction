@@ -19,20 +19,21 @@ export class PlotsService {
     return 'Hello Plot!';
   }
     
-  getAll(): Promise<Plots[]> {
-      console.log("PlotService : getAll()");
-      return this.repository.find();
-  }
+  // getAll(): Promise<Plots[]> {
+  //     console.log("PlotService : getAll()");
+  //     return this.repository.find();
+  // }
 
 
-  async getById(id: number): Promise<Plots> {
-    console.log("PlotService : getById() with ID " + id);
+  async getByIdAndProject(id: number, projectId: number): Promise<Plots> {
+    console.log("PlotService : getById() with ID ${id} and project ${projectId}");
     if (id <= 0)
         throw Error("PlotService : getById() id cannot be negative");
 
       return this.repository.findOne({
         where: {
           id: id,
+          projectId: projectId
         }
     })
   };
@@ -58,10 +59,11 @@ export class PlotsService {
   //   });
   // };
 
-  async create(createPlotDto: CreatePlotDTO) {
-      console.log("PlotService : create() for plot  " + createPlotDto.projectId);
+  async create(projectId: number,
+              createPlotDto: CreatePlotDTO): Promise<number> {
+      console.log("PlotService : create new plot in  " + projectId);
       let plotEntity = new Plots()
-      plotEntity.projectId=createPlotDto.projectId;
+      plotEntity.projectId=projectId;
       plotEntity.season=createPlotDto.seasonId;
       plotEntity.start_date=createPlotDto.startDate;
       plotEntity.end_date=createPlotDto.endDate;
@@ -70,14 +72,18 @@ export class PlotsService {
       return plotEntity.id;
     }; 
 
-  async update(id: number, 
+  async update(
+    id: number, 
+    projectId: number,
     updatePlotDto: UpdatePlotDTO) {
-      console.log("PlotService : update()  ID " + id + " not implemented yes");
+      console.log('PlotService : update()  plot ${id} in project {$projectId} not implemented yet');
       return -1;
   };
 
-  async delete(id: number) {
-      console.log("PlotService : delete()  plot " + id + " not implemented yes");
+  async delete(
+    id: number,
+    projectId: number): Promise<any> {
+      console.log('PlotService : delete()  plot ${id} in project {$projectId} not implemented yet');
       return null;
   };
 }

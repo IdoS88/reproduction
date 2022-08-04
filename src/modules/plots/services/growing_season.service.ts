@@ -25,14 +25,17 @@ export class GrowingSeasonService {
     }
 
 
-  async getById(id: number): Promise<GrowingSeason> {
-      console.log("GrowingSeasonService : getById() with ID " + id);
+  async getByIdAndProject(
+    id: number,
+    projectid: number): Promise<GrowingSeason> {
+      console.log("GrowingSeasonService : getByIdAndProject(${id}) for ptoject ${projectid} " );
       if (id <= 0)
-        throw Error("GrowingSeasonService : getById() id cannot be negative");
+        throw Error("GrowingSeasonService : getByIdAndProject() id cannot be negative");
 
       return this.repository.findOne({
         where: {
           id: id,
+          projectId: projectid
         }
       })
   };

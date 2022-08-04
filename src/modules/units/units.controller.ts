@@ -46,7 +46,7 @@ export class UnitsController {
   }
 }
 
-
+@ApiTags('Units Family')
 @Controller('unitsfamily')
 export class UnitsFamilyController {
   constructor(private readonly unitsFamilyService: UnitsFamilyService) {}
