@@ -3,20 +3,30 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectsModule } from './modules/projects/projects.module'
 import { PlotsModule } from './modules/plots/plots.module'
 import { CropsModule } from './modules/crops/crops.module'
-import { WorkersToolsModule } from './modules/workers/workers.module';
+import { WorkersModule } from './modules/workers/workers.module';
+import { ToolsModule } from './modules/tools/tools.module';
 import { UnitsModule } from './modules/units/units.module';
+
+import * as dotenv from 'dotenv'
+dotenv.config();
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '164.92.166.48',
+      /*host: "164.92.166.48",
       port: 3306,
-      username: 'node',
-      password: 'Geshem@2030',
-      database: 'geshem_dev',
+      username: "node",
+      database: "geshem_dev",
+      password: "Geshem@2030",*/
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      username:process.env.DB_USER,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+     
       synchronize: false,  // false means do not auto create tables in DB
-      logging: false,
+      logging: true,
       autoLoadEntities: true,
       cache : true,
     }),
@@ -24,7 +34,8 @@ import { UnitsModule } from './modules/units/units.module';
     PlotsModule,
     CropsModule,
     UnitsModule,
-    WorkersToolsModule
+    WorkersModule,
+    ToolsModule
   ],
   controllers: [],
   providers: []

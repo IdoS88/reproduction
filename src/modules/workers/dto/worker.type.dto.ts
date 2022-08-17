@@ -1,12 +1,12 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateWorkerDto {
+export class CreateWorkerTypeDto {
     @ApiProperty()
     name: string;
-    
+
     @ApiProperty()
-    typesIds: number[];
+    workesIds: number[];
 }
 
-export class UpdateWorkerDto extends PartialType(CreateWorkerDto) {}
+export class UpdateWorkerTypeDto extends PartialType(CreateWorkerTypeDto) {}

@@ -28,7 +28,7 @@ export class gPlotService {
   async getByIdAndProject(
     id: number,
     projectId: number): Promise<gPlot> {
-      console.log("gPlotService : getById() with plot ID ${id} and project ${projectId}");
+      console.log(`gPlotService : getById() with plot ID ${id} and project ${projectId}`);
       if (id <= 0)
         throw Error("gPlotService : getById() id cannot be negative");
       return this.repository.findOne({
@@ -52,7 +52,7 @@ export class gPlotService {
   async create(
     projectId: number,
     createGPlotDto: CreateGPlotDTO) {
-      console.log("gPlotService : create gplot '${createGPlotDto.gplot_name}' in project ${projectId} ");
+      console.log(`gPlotService : create gplot '${createGPlotDto.gplot_name}' in project ${projectId} `);
       let gplotEntity = new gPlot()
       gplotEntity.projectId=projectId;
       gplotEntity.gplot_name=createGPlotDto.gplot_name;
@@ -65,13 +65,13 @@ export class gPlotService {
     id: number,
     projectId: number,
     updateGPlotDto:UpdateGPlotDTO) {
-      console.log("gplot service : update gplot ${id} in project ${projectId not implemented yet");
+      console.log(`gplot service : update gplot ${id} in project ${projectId} not implemented yet`);
       return -1;
     };
 
   async delete(id: number,
               projectId: number) {
-      console.log("gplot service : delete gplot ${id} in project ${projectId not implemented yet");
+      console.log(`gplot service : delete gplot ${id} in project ${projectId} not implemented yet`);
       return null;
     };
 }

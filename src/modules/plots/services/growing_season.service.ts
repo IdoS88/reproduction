@@ -15,22 +15,22 @@ export class GrowingSeasonService {
           console.log("on GrowingSeasonService constructor")
     };
     
-    async getHello(): Promise<string> {
-        return 'Hello GrowingSeason!';
-    }
+  async getHello(): Promise<string> {
+      return 'Hello GrowingSeason!';
+  }
     
-  getAll(): Promise<GrowingSeason[]> {
-      console.log("GrowingSeasonService : getAll()");
-      return this.repository.find();
-    }
+  // getAll(): Promise<GrowingSeason[]> {
+  //     console.log("GrowingSeasonService : getAll()");
+  //     return this.repository.find();
+  //   }
 
 
   async getByIdAndProject(
     id: number,
     projectid: number): Promise<GrowingSeason> {
-      console.log("GrowingSeasonService : getByIdAndProject(${id}) for ptoject ${projectid} " );
+      console.log(`GrowingSeasonService : getByIdAndProject(${id}) for ptoject ${projectid}` );
       if (id <= 0)
-        throw Error("GrowingSeasonService : getByIdAndProject() id cannot be negative");
+        throw Error(`GrowingSeasonService : getByIdAndProject() id cannot be negative`);
 
       return this.repository.findOne({
         where: {
@@ -52,11 +52,12 @@ export class GrowingSeasonService {
     })
   };
 
-  async create(createGrowingSeasonDto: CreateGrowingSeasonDTO) {
-      console.log("GrowingSeasonService : create() for season name " + createGrowingSeasonDto.name);
+  async create(projectid: number,
+               createGrowingSeasonDto: CreateGrowingSeasonDTO) {
+      console.log(`GrowingSeasonService : create() for season name ${createGrowingSeasonDto.name} for project ${projectid}`);
       let growingSeasonEntity = new GrowingSeason()
       growingSeasonEntity.name=createGrowingSeasonDto.name;
-      growingSeasonEntity.projectId=createGrowingSeasonDto.projectId;
+      growingSeasonEntity.projectId=projectid;
       growingSeasonEntity.start_date=createGrowingSeasonDto.startDate;
       growingSeasonEntity.end_date=createGrowingSeasonDto.endDate;
       
@@ -65,13 +66,15 @@ export class GrowingSeasonService {
     }; 
 
   async update(id: number,
+               projectid: number,
                updateGrowingSeasonDto: UpdateGrowingSeasonDTO) {
-      console.log("GrowingSeasonService: update()  ID " + id + " not implemented yes");
+      console.log(`GrowingSeasonService: update()  ID ${id} for project ${projectid} not implemented yes`);
       return -1;
     };
 
-  async delete(id: number) {
-      console.log("GrowingSeasonService : delete()   ID " + id + " not implemented yes");
+  async delete(id: number,
+               projectid: number) {
+      console.log(`GrowingSeasonService : delete() ID ${id} for project ${projectid} not implemented yes`);
       return null;
     };
 }

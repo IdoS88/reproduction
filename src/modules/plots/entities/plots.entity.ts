@@ -3,7 +3,8 @@ import {Projects} from 'src/modules/projects/entities/projects.entity';
 import {CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
 
 import {GrowingSeason} from './growing_season.entity';
-@Entity()
+
+@Entity('plots')
 export class Plots extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number;

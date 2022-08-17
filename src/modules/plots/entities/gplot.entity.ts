@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn , BaseEntity} from 'typeorm';
 import {Projects} from 'src/modules/projects/entities/projects.entity';
-@Entity()
+
+@Entity('g_plot')
 export class gPlot extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

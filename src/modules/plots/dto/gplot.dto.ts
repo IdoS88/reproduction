@@ -1,8 +1,8 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 export class CreateGPlotDTO {
-    @ApiProperty()
-    projectid : number;  
+    //@ApiProperty()
+    //projectid : number;  
 
     @ApiProperty()
     gplot_name : string;

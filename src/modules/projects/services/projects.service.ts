@@ -51,13 +51,13 @@ export class ProjectsService {
 
   async update(id: number, 
                updateProjectsDto: UpdateProjectDTO) {
-      console.log("project service : update()  project ID " + id + " not implemented yes");
+      console.log(`project service : update()  project ID ${id} not implemented yes`);
       await this.projectRepository.update(id, updateProjectsDto);
       return -1;
     };
 
   async delete(id: number) {
-      console.log("project service : delete()  project ID " + id + " not implemented yes");
+      console.log(`project service : delete()  project ID ${id} not implemented yes`);
       return null;
     };
 }
