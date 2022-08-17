@@ -26,7 +26,7 @@ export class PlotsService {
 
 
   async getByIdAndProject(id: number, projectId: number): Promise<Plots> {
-    console.log("PlotService : getById() with ID ${id} and project ${projectId}");
+    console.log(`PlotService : getById() with ID ${id} and project ${projectId}`);
     if (id <= 0)
         throw Error("PlotService : getById() id cannot be negative");
 
@@ -76,14 +76,14 @@ export class PlotsService {
     id: number, 
     projectId: number,
     updatePlotDto: UpdatePlotDTO) {
-      console.log('PlotService : update()  plot ${id} in project {$projectId} not implemented yet');
+      console.log(`PlotService : update()  plot ${id} in project ${projectId} not implemented yet`);
       return -1;
   };
 
   async delete(
     id: number,
     projectId: number): Promise<any> {
-      console.log('PlotService : delete()  plot ${id} in project {$projectId} not implemented yet');
+      console.log(`PlotService : delete()  plot ${id} in project ${projectId} not implemented yet`);
       return null;
   };
 }

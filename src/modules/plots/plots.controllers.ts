@@ -1,4 +1,4 @@
-import { Controller , Get, Post, Put, Res,  Param, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe, Patch} from '@nestjs/common';
+import { Controller , Get, Post, Put, Res,  Param, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe, Patch, HttpException} from '@nestjs/common';
 import { Response } from 'express';
 import { PlotsService } from "./services/plots.service";
 import { gPlotService } from "./services/gplot.service";
@@ -6,8 +6,8 @@ import { GrowingSeasonService } from "./services/growing_season.service";
 import { CreatePlotDTO , FilterPlotQueryDTO, UpdatePlotDTO} from "./dto/plots.dto";
 import { UpdateGPlotDTO,  CreateGPlotDTO } from "./dto/gplot.dto";
 import { CreateGrowingSeasonDTO, UpdateGrowingSeasonDTO } from "./dto/growing_season.dto";
-import { Projects } from '../projects/entities/projects.entity';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { httpResponses} from 'src/modules/commons/routes.constants';
 
 const plotPathes={
     Plots :  'Plots/Plots',
@@ -66,20 +66,26 @@ export class PlotController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
+    @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
     async updatePlot(
         @Param('id') id: number,
         @Query('project') projectid : number,
         @Body() updatePlotDto: UpdatePlotDTO) {
         console.log("Plot controller: updatePlot ")
+        throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description,
+                                httpResponses.UPDATE_NOT_IMPLEMENTED.status);
         const plot = await this.plotsService.update(id, projectid, updatePlotDto);
         return plot;
     }
 
     @Delete(':id')
+    @ApiResponse({ status: 532, description: 'delete functionality not implemented.'})
     async deletePlot(
         @Param('id') id: number,
-        @Query('project') projectId : number) {
-        const plots = await this.plotsService.delete(id, projectId);
+        @Query('project') projectid : number) {
+        throw new HttpException(httpResponses.DELETE_NOT_IMPLEMENTED.description, 
+                                httpResponses.DELETE_NOT_IMPLEMENTED.status);
+        const plots = await this.plotsService.delete(id, projectid);
         return plots;
     }
 }
@@ -111,10 +117,10 @@ export class gPlotController {
     @Get("/:id")
     async GetGPlotById(
         @Param('id') id: number,
-        @Query('project') projectId: number,
+        @Query('project') projectid: number,
         @Res() res: Response) {               
-        console.log(`gPlotController: GetGPlotById ${id}`)
-        let gprojObj = await this.gplotService.getByIdAndProject(id, projectId);
+        console.log(`gPlotController: GetGPlotById ${id} for project ${projectid}`)
+        let gprojObj = await this.gplotService.getByIdAndProject(id, projectid);
         return res.status(HttpStatus.OK).json(gprojObj);
     };
        
@@ -133,10 +139,10 @@ export class gPlotController {
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     async createGPlot(
-        @Query('project') projectId: number,
+        @Query('project') projectid: number,
         @Body() createGPlotDto: CreateGPlotDTO) {
-        console.log("gPlotController: updatePlot in project ${projectId}")
-        const plot = await this.gplotService.create(projectId, createGPlotDto);
+        console.log("gPlotController: updatePlot in project ${projectid}")
+        const plot = await this.gplotService.create(projectid, createGPlotDto);
         return plot;
     }
 
@@ -144,20 +150,27 @@ export class gPlotController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
+    @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
     async updategPlot(
         @Param('id') id: number,
-        @Query('project') projectId: number,
+        @Query('project') projectid: number,
         @Body() updateGPlotDto: UpdateGPlotDTO) {
-        console.log("gPlotController: updategPlot in project ${projectId}")
-        const plot = await this.gplotService.update(id, projectId, updateGPlotDto);
+        console.log("gPlotController: updategPlot in project ${projectid}")
+        throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description, 
+                                httpResponses.UPDATE_NOT_IMPLEMENTED.status);
+        const plot = await this.gplotService.update(id, projectid, updateGPlotDto);
         return plot;
     }
 
     @Delete(':id')
+    @ApiResponse({ status: 532, description: 'delete functionality not implemented.'})
     async deletegPlot(
         @Param('id') id: number,
-        @Query('project') projectId : number) {
-        const growingSeasion = await this.gplotService.delete(id, projectId);
+        @Query('project') projectid : number) {
+        console.log("gPlotController: deletegPlot in project ${projectid}")
+        throw new HttpException(httpResponses.DELETE_NOT_IMPLEMENTED.description, 
+                                httpResponses.DELETE_NOT_IMPLEMENTED.status);
+        const growingSeasion = await this.gplotService.delete(id, projectid);
         return growingSeasion;
     }
 }
@@ -178,21 +191,21 @@ export class growingController {
     // --- for growingSesion
     @Get()
     async GetAllGrowingSeason(
-        @Query('project') projectId: number,
+        @Query('project') projectid: number,
         @Res() res: Response) {
-        console.log("GrowingSeason controller : GetAllGrowingSeason() for project ${projectId}");
-        let allObjects= await this.growingSeasonService.getByProject(projectId);
+        console.log('GrowingSeason controller : GetAllGrowingSeason() for project ${projectid}');
+        let allObjects= await this.growingSeasonService.getByProject(projectid);
 
         return res.status(HttpStatus.OK).json(allObjects);
     }
 
     @Get("/:id")
     async GetGrowingSeasonByIdAndProject(
-        @Query('project') projectId: number,
+        @Query('project') projectid: number,
         @Param('id')  id: number ,
         @Res() res: Response) {
-        console.log("GrowingSeason controller: get GetGrowingSeasonByIdAndProject ${id} for project ${projectId}")
-        let growingObj = await this.growingSeasonService.getByIdAndProject(id, projectId);
+        console.log("GrowingSeason controller: get GetGrowingSeasonByIdAndProject ${id} for project ${projectid}")
+        let growingObj = await this.growingSeasonService.getByIdAndProject(id, projectid);
         return res.status(HttpStatus.OK).json(growingObj);
     }
 
@@ -201,10 +214,10 @@ export class growingController {
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     async createGrowingSeason(
-        @Query('project') projectId : number,
+        @Query('project') projectid : number,
         @Body() createGrowingSeasonDto: CreateGrowingSeasonDTO) {
-        console.log("GrowingSeason controller: createGrowingSeason " + createGrowingSeasonDto.projectId)
-        const growingSeason = await this.growingSeasonService.create(createGrowingSeasonDto);
+        console.log("GrowingSeason controller: createGrowingSeason ${projectid}")
+        const growingSeason = await this.growingSeasonService.create(projectid, createGrowingSeasonDto);
         return growingSeason;
     }
 
@@ -212,20 +225,27 @@ export class growingController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
+    @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
     async updateGrowingSeason(
         @Param('id') id: number,
-        @Query('project') projectId : number,
+        @Query('project') projectid : number,
         @Body() updateGrowingSeasonDto: UpdateGrowingSeasonDTO): Promise<number> {
-        console.log("GrowingSeason controller: updateGrowingSeason ")
-        const plot = await this.growingSeasonService.update(id, updateGrowingSeasonDto);
+        console.log('GrowingSeason controller: updateGrowingSeason ${projectid}')
+        throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description, 
+                                httpResponses.UPDATE_NOT_IMPLEMENTED.status);
+        const plot = await this.growingSeasonService.update(id, projectid, updateGrowingSeasonDto);
         return plot;
     }
 
     @Delete(':id')
+    @ApiResponse({ status: 532, description: 'delete functionality not implemented.'})
     async deleteGrowingSeason(
         @Param('id') plotgrowingSeasionIdid: number,
-        @Query('project') projectId : number) {
-        const growingSeasion = await this.growingSeasonService.delete(plotgrowingSeasionIdid);
+        @Query('project') projectid : number) {
+        console.log("GrowingSeason Controller: delete GrowingSeason in project ${projectId}")
+        throw new HttpException(httpResponses.DELETE_NOT_IMPLEMENTED.description, 
+                                httpResponses.DELETE_NOT_IMPLEMENTED.status);
+        const growingSeasion = await this.growingSeasonService.delete(projectid, plotgrowingSeasionIdid);
         return growingSeasion;
     }
 }

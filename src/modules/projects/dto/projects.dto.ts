@@ -1,4 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 
 export class CreateProjectDTO {
     @ApiProperty()
@@ -9,3 +9,4 @@ export class CreateProjectDTO {
 }
 
 export class UpdateProjectDTO extends PartialType(CreateProjectDTO) {};
+

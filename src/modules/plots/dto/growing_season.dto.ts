@@ -1,8 +1,8 @@
-import { ApiProperty, PartialType } from "@nestjs/swagger";
+import { ApiProperty, OmitType, PartialType } from "@nestjs/swagger";
 
 export class CreateGrowingSeasonDTO {
-    @ApiProperty()
-    projectId : number; 
+   // @ApiProperty()
+   // projectId : number; 
 
     @ApiProperty()
     name : string;

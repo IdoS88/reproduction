@@ -1,8 +1,9 @@
-import { Controller , Get, Post, Patch, Res, Param, Body, Delete, Query, HttpStatus} from '@nestjs/common';
+import { Controller , Get, Post, Patch, Res, Param, Body, Delete, Query, HttpStatus, HttpException} from '@nestjs/common';
 import { Response } from 'express';
 import { ProjectsService } from "./services/projects.service";
 import { CreateProjectDTO, UpdateProjectDTO } from "./dto/projects.dto";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { httpResponses} from 'src/modules/commons/routes.constants';
 
 @ApiTags('Projects')
 @Controller('Projects')
@@ -42,11 +43,14 @@ export class ProjectsController {
     }
 
     @Patch('/:id')
+    //@ApiResponse(httpResponses.DELETE_NOT_IMPLEMENTED)
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
     async update(@Param('id') id: number,
-                 @Body() updateProjectDto: UpdateProjectDTO) {
+                 @Body() updateProjectDto: UpdateProjectDTO): Promise<number> {
+        throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description,
+                                httpResponses.UPDATE_NOT_IMPLEMENTED.status);
         const project = await this.projectsService.update(id, updateProjectDto);
         return project;
     }
@@ -54,6 +58,8 @@ export class ProjectsController {
     @Delete(':id')
     @ApiResponse({ status: 532, description: 'delete functionality not implemented.'})
     async delete(@Param('id') projectid: number) {
+        throw new HttpException(httpResponses.DELETE_NOT_IMPLEMENTED.description, 
+                                httpResponses.DELETE_NOT_IMPLEMENTED.status);
         const projects = await this.projectsService.delete(projectid);
         return projects;
     }
