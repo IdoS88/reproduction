@@ -4,6 +4,7 @@ import { ProjectsService } from "./services/projects.service";
 import { CreateProjectDTO, UpdateProjectDTO } from "./dto/projects.dto";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { httpResponses} from 'src/modules/commons/routes.constants';
+import { Unprotected, Public } from 'nest-keycloak-connect';
 
 @ApiTags('Projects')
 @Controller('Projects')
@@ -11,13 +12,15 @@ export class ProjectsController {
     //projectService : ProjectService;
 
     constructor(private projectsService : ProjectsService) {};
-
+    
     @Get("/hello")
+    @Unprotected()
     async helloProject()  {
-       return await this.projectsService.getHello();
+        return await this.projectsService.getHello();
     }
 
     @Get()
+    @Public()
     async GetAllProjects(@Res() res: Response) {
         console.log("project controller : GetAllProjects()");
         let allObjects= await this.projectsService.getAll();

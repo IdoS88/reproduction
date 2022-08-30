@@ -2,7 +2,7 @@ import { Injectable , HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 //import { DATABASE_CONNECTION_TOKEN } from '../../commons/db.constants';
-import { Projects } from '../entities/projects.entity';
+import { Project } from '../entities/projects.entity';
 import { CreateProjectDTO, UpdateProjectDTO } from "../dto/projects.dto";
 //import { IProjectRepository } from "../data-access/project.repository";
 
@@ -11,8 +11,8 @@ export class ProjectsService {
 
     // sivan: better practice to costraint the type of conn. not know yet to which interface
     constructor(
-        @InjectRepository(Projects)
-        private projectRepository: Repository<Projects>){
+        @InjectRepository(Project)
+        private projectRepository: Repository<Project>){
           console.log("on ProjectService constructor")
         };
     
@@ -20,13 +20,13 @@ export class ProjectsService {
         return 'Hello Project!';
     }
     
-  getAll(): Promise<Projects[]> {
+  getAll(): Promise<Project[]> {
       console.log("project service : getAll()");
       return this.projectRepository.find();
     }
 
 
-  async getById(id: number): Promise<Projects> {
+  async getById(id: number): Promise<Project> {
       console.log("project service : getById() with project ID " + id);
       if (id <= 0)
         throw Error("project service : getById() id cannot be negative");
@@ -40,7 +40,7 @@ export class ProjectsService {
 
   async create(createProjectDto: CreateProjectDTO) {
       console.log("project service : create() with project name " + createProjectDto.name );
-      let projectEntity = new Projects()
+      let projectEntity = new Project()
       //projectEntity.id=createProjectDto.id;
       projectEntity.name=createProjectDto.name;
       projectEntity.iconSrc=createProjectDto.iconSrc;

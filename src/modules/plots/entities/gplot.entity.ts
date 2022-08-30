@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn , BaseEntity} from 'typeorm';
-import {Projects} from 'src/modules/projects/entities/projects.entity';
+import {Project} from 'src/modules/projects/entities/projects.entity';
 
 @Entity('g_plot')
 export class gPlot extends BaseEntity {
@@ -10,9 +10,9 @@ export class gPlot extends BaseEntity {
  @Column()
  projectId: number;
 
- @OneToMany(type => Projects, projectid=>Projects.getId)
+ @OneToMany(type => Project, projectid=>Project.getId)
  @JoinColumn({name: "projectId" })
- project: Projects;
+ project: Project;
 
   @Column(({ length: 50 }))
   gplot_name: string;

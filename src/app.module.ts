@@ -6,12 +6,29 @@ import { CropsModule } from './modules/crops/crops.module'
 import { WorkersModule } from './modules/workers/workers.module';
 import { ToolsModule } from './modules/tools/tools.module';
 import { UnitsModule } from './modules/units/units.module';
+import { KeycloakConnectModule, ResourceGuard, RoleGuard, AuthGuard, PolicyEnforcementMode, TokenValidation,} from 'nest-keycloak-connect';
+import { APP_GUARD } from '@nestjs/core';
 
 import * as dotenv from 'dotenv'
 dotenv.config();
 
+
+
 @Module({
   imports: [
+    KeycloakConnectModule.register({
+      authServerUrl: 'https://dev-new.geshem-ag.com:8443',
+      realm: 'Geshsem-dev',
+      clientId: 'geshem-dev',
+      secret: 'secret',   
+      policyEnforcement: PolicyEnforcementMode.PERMISSIVE, // optional
+      tokenValidation: TokenValidation.ONLINE, // optional
+    /*  clientId: 'nest-app',
+      secret: '83790b4f-48cd-4b6c-ac60-451a918be4b9',
+      // Secret key of the client taken from keycloak server
+      */
+    }),
+   
     TypeOrmModule.forRoot({
       type: 'mysql',
       /*host: "164.92.166.48",
@@ -38,7 +55,36 @@ dotenv.config();
     ToolsModule
   ],
   controllers: [],
-  providers: []
+  providers: [
+    
+    // This adds a global level authentication guard,
+    // you can also have it scoped
+    // if you like.
+    //
+    // Will return a 401 unauthorized when it is unable to
+    // verify the JWT token or Bearer header is missing.
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    // This adds a global level resource guard, which is permissive.
+    // Only controllers annotated with @Resource and 
+    // methods with @Scopes
+    // are handled by this guard.
+    {
+      provide: APP_GUARD,
+      useClass: ResourceGuard,
+    },
+    // New in 1.1.0
+    // This adds a global level role guard, which is permissive.
+    // Used by `@Roles` decorator with the 
+    // optional `@AllowAnyRole` decorator for allowing any
+    // specified role passed.
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
+    },
+  ],
 })
 export class AppModule {}
 

@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, JoinColumn,BaseEntity } from 'typeorm';
-import {Projects} from 'src/modules/projects/entities/projects.entity';
+import {Project} from 'src/modules/projects/entities/projects.entity';
 import {CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
 
 import {GrowingSeason} from './growing_season.entity';
@@ -10,9 +10,9 @@ export class Plots extends BaseEntity{
   id: number;
 
   @Column()  projectId: number;
-  @OneToMany(type => Projects, projectid=>Projects.getId)
+  @OneToMany(type => Project, projectid=>Project.getId)
   @JoinColumn({name: "projectId" })
-  project: Projects;
+  project: Project;
   
   @Column()  crop_strainid: number;
   @OneToMany(type => CropsStrain, crop_strainid=>CropsStrain.getId, { nullable: true }) 
