@@ -4,7 +4,7 @@ import { ProjectsService } from "./services/projects.service";
 import { CreateProjectDTO, UpdateProjectDTO } from "./dto/projects.dto";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { httpResponses} from 'src/modules/commons/routes.constants';
-import { Unprotected, Public } from 'nest-keycloak-connect';
+import { Unprotected, Public, Scopes, Roles, AuthenticatedUser, RoleMatchingMode } from 'nest-keycloak-connect';
 
 @ApiTags('Projects')
 @Controller('Projects')
@@ -14,19 +14,28 @@ export class ProjectsController {
     constructor(private projectsService : ProjectsService) {};
     
     @Get("/hello")
-    @Unprotected()
-    async helloProject()  {
-        return await this.projectsService.getHello();
+    @Public(false)
+    //@Unprotected()
+    async helloProject(@AuthenticatedUser() user: any)  {
+        if (user) {
+            return `Hello ${user.preferred_username}`;
+          } else {
+            return 'Hello world!';
+          }
     }
 
     @Get()
     @Public()
-    async GetAllProjects(@Res() res: Response) {
-        console.log("project controller : GetAllProjects()");
-        let allObjects= await this.projectsService.getAll();
+    @Scopes('View')
+//    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
+    async GetAllProjects(
+        @AuthenticatedUser() user: any,
+        @Res() res: Response) {
+            console.log(`project controller : GetAllProjects() for user ${user.preferred_username}`);
+            let allObjects= await this.projectsService.getAll();
 
-       // console.log("router /all get results "+ projObjects)   
-        return res.status(HttpStatus.OK).json(allObjects);
+            // console.log("router /all get results "+ projObjects)   
+            return res.status(HttpStatus.OK).json(allObjects);
     }
 
     @Get('/:id')

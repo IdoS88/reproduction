@@ -6,29 +6,25 @@ import { CropsModule } from './modules/crops/crops.module'
 import { WorkersModule } from './modules/workers/workers.module';
 import { ToolsModule } from './modules/tools/tools.module';
 import { UnitsModule } from './modules/units/units.module';
-import { KeycloakConnectModule, ResourceGuard, RoleGuard, AuthGuard, PolicyEnforcementMode, TokenValidation,} from 'nest-keycloak-connect';
+import { AuthGuard, KeycloakConnectModule, ResourceGuard, RoleGuard,} from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
+import { AutorizationModule } from './modules/config/auth.config.module';
+import { KeycloakConfigService } from './modules/config/auth.cnfig.service';
 
 import * as dotenv from 'dotenv'
+
 dotenv.config();
 
 
 
 @Module({
   imports: [
-    KeycloakConnectModule.register({
-      authServerUrl: 'https://dev-new.geshem-ag.com:8443',
-      realm: 'Geshsem-dev',
-      clientId: 'geshem-dev',
-      secret: 'secret',   
-      policyEnforcement: PolicyEnforcementMode.PERMISSIVE, // optional
-      tokenValidation: TokenValidation.ONLINE, // optional
-    /*  clientId: 'nest-app',
-      secret: '83790b4f-48cd-4b6c-ac60-451a918be4b9',
-      // Secret key of the client taken from keycloak server
-      */
+    KeycloakConnectModule.registerAsync({
+      useExisting: KeycloakConfigService,
+      imports:[AutorizationModule]
     }),
-   
+
+
     TypeOrmModule.forRoot({
       type: 'mysql',
       /*host: "164.92.166.48",
@@ -84,6 +80,7 @@ dotenv.config();
       provide: APP_GUARD,
       useClass: RoleGuard,
     },
+    
   ],
 })
 export class AppModule {}
