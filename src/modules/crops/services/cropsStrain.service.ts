@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCropsStrainDto } from '../dto/create-cropsStrain.dto';
 import { UpdateCropsStrainDto } from '../dto/update-cropsStrain.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CropsStrain } from '../entities/cropsStrain.entity';
 import { CropsService } from './crops.service';
 import { Crops } from '../entities/crop.entity';
@@ -34,6 +34,14 @@ export class CropsStrainService {
       throw Error("Crop id cannot be negative");
     return this.cropsStrainRepository.find({
       where: {cropId: cropid,}
+    });
+  }
+
+  getCropsStrainByStrainIds(cropStrainIds: number[]): Promise<CropsStrain[]> {
+    return this.cropsStrainRepository.find({
+      where: {
+        id: In (cropStrainIds)
+      }
     });
   }
 

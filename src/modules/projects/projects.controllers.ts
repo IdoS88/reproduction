@@ -25,13 +25,13 @@ export class ProjectsController {
     }
 
     @Get()
-    @Public()
+    @Public(false)
     @Scopes('View')
-//    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
+    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
     async GetAllProjects(
         @AuthenticatedUser() user: any,
         @Res() res: Response) {
-            console.log(`project controller : GetAllProjects() for user ${user.preferred_username}`);
+           // console.log(`project controller : GetAllProjects() for user ${user.preferred_username}`);
             let allObjects= await this.projectsService.getAll();
 
             // console.log("router /all get results "+ projObjects)   
@@ -47,6 +47,8 @@ export class ProjectsController {
     }
 
     @Post()
+    @Scopes('Edit')
+    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     async create(@Body() createProjectDto: CreateProjectDTO): Promise<number> {
@@ -55,19 +57,23 @@ export class ProjectsController {
     }
 
     @Patch('/:id')
+    @Scopes('Edit')
+    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
     //@ApiResponse(httpResponses.DELETE_NOT_IMPLEMENTED)
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
     async update(@Param('id') id: number,
-                 @Body() updateProjectDto: UpdateProjectDTO): Promise<number> {
-        throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description,
-                                httpResponses.UPDATE_NOT_IMPLEMENTED.status);
-        const project = await this.projectsService.update(id, updateProjectDto);
+                 @Body() updateProjectDto: UpdateProjectDTO) {
+        //throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description,
+        //                        httpResponses.UPDATE_NOT_IMPLEMENTED.status);
+        let project = await this.projectsService.update(id, updateProjectDto);
         return project;
     }
 
     @Delete(':id')
+    @Scopes('Edit')
+    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
     @ApiResponse({ status: 532, description: 'delete functionality not implemented.'})
     async delete(@Param('id') projectid: number) {
         throw new HttpException(httpResponses.DELETE_NOT_IMPLEMENTED.description, 

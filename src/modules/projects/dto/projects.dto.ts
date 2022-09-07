@@ -1,4 +1,5 @@
 import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
+import { IsArray, IsNumber } from 'class-validator';
 
 export class CreateProjectDTO {
     @ApiProperty()
@@ -8,5 +9,10 @@ export class CreateProjectDTO {
     iconSrc : string;
 }
 
-export class UpdateProjectDTO extends PartialType(CreateProjectDTO) {};
+export class UpdateProjectDTO extends PartialType(CreateProjectDTO) {
+    @ApiProperty({ isArray: true })
+    @IsNumber({}, { each: true })
+    @IsArray()
+    cropsStrainIds: number[];
+};
 

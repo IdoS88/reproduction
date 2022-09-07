@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
+import { CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
+import { Entity, Column, PrimaryGeneratedColumn, 
+         BaseEntity, ManyToOne, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
 
 @Entity('projects')
 export class Project extends BaseEntity{
@@ -11,4 +13,22 @@ export class Project extends BaseEntity{
 
   @Column()
   iconSrc: string;
+
+  @ManyToMany(() => CropsStrain, 
+              (crpstrn: CropsStrain) => crpstrn.projectsArr) 
+              // { cascade: true ,
+              //   onUpdate:'CASCADE',
+              //   eager: true})
+  // @JoinTable({
+  //   name: "project_cropStrain", // table name for the junction table of this relation
+  //   joinColumn: {
+  //       name: "project",
+  //       referencedColumnName: "id"
+  //   },
+  //   inverseJoinColumn: {
+  //       name: "cropsStrain",
+  //       referencedColumnName: "id"
+  //   }
+//})
+cropsStrainArr!: CropsStrain[];
 }

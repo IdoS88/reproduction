@@ -7,11 +7,11 @@ export class KeycloakConfigService implements KeycloakConnectOptionsFactory {
   createKeycloakConnectOptions(): KeycloakConnectOptions {
     return {
       authServerUrl: 'https://dev-new.geshem-ag.com:8443',
-      realm: 'Geshsem-dev',
+      realm: 'geshsem-dev',
       clientId: 'geshem-dev',
-      secret: 'secret',   
+      secret: 'T8MzyrPlZrHonJ5A5MDmz9MkAoq5sSRS',   
       policyEnforcement: PolicyEnforcementMode.PERMISSIVE, // optional
-      tokenValidation: TokenValidation.ONLINE, // optional
+      tokenValidation: TokenValidation.NONE, // optional
     };
   } 
 }

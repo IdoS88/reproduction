@@ -9,8 +9,9 @@ import { Crops } from './entities/crop.entity';
 import { CropsStrain } from './entities/cropsStrain.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([CropsKind, Crops, CropsStrain])],
   controllers: [CropsKindController, CropsController, CropsStrainController],
   providers: [CropsKindService, CropsService, CropsStrainService],
-  imports: [TypeOrmModule.forFeature([CropsKind, Crops, CropsStrain])],
+  exports:[CropsStrainService]
 })
 export class CropsModule {}
