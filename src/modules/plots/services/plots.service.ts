@@ -4,6 +4,9 @@ import { Repository } from 'typeorm';
 //import { DATABASE_CONNECTION_TOKEN } from '../../commons/db.constants';
 import { Plots } from '../entities/plots.entity';
 import { CreatePlotDTO, UpdatePlotDTO } from "../dto/plots.dto";
+import { ProjectsService } from 'src/modules/projects/services/projects.service';
+//import { Project } from 'src/modules/projects/entities/projects.entity';
+import {err_illegalMissingProject, err_EntityNotFound} from 'src/modules/commons/errors';
 
 @Injectable()
 export class PlotsService {
@@ -11,7 +14,8 @@ export class PlotsService {
   //sivan: better practice to costraint the type of conn. not know yet to which interface
   constructor(
       @InjectRepository(Plots)
-      private repository: Repository<Plots>){
+      private repository: Repository<Plots>,
+      private readonly projectService: ProjectsService){
         console.log("on PlotService constructor")
   };
     
@@ -64,7 +68,7 @@ export class PlotsService {
       console.log("PlotService : create new plot in  " + projectId);
       let plotEntity = new Plots()
       plotEntity.projectId=projectId;
-      plotEntity.season=createPlotDto.seasonId;
+      plotEntity.seasonId=createPlotDto.seasonId;
       plotEntity.start_date=createPlotDto.startDate;
       plotEntity.end_date=createPlotDto.endDate;
       
@@ -76,8 +80,38 @@ export class PlotsService {
     id: number, 
     projectId: number,
     updatePlotDto: UpdatePlotDTO) {
-      console.log(`PlotService : update()  plot ${id} in project ${projectId} not implemented yet`);
-      return -1;
+      
+    let result = null;
+    
+    console.log(`PlotService : update()  plot ${id} in project ${projectId}`);
+    let plotObj = await this.getByIdAndProject(id, projectId)
+    
+    if (plotObj===null){
+      //sivan: should through exception
+      throw new err_EntityNotFound(`PlotService service : update plot ${id} but missing project ${projectId}`);
+    }
+    
+    let projectObject = await this.projectService.getById(projectId)
+    let cropStrain_in_project = projectObject.cropsStrainArr.find(
+        function(x){  return (x.id === updatePlotDto.crop_strainId)});  
+    
+    if (cropStrain_in_project===null)  {
+      throw Error (`PlotService service : update plot ${id} but project ${projectId} not allows cropstrain ${updatePlotDto.crop_strainId}`);
+    }
+
+    //save plot with relevant crops strains
+    let plotEntity = new Plots()
+    plotEntity.id=id;
+    plotEntity.projectId=projectId;
+    plotEntity.crop_strainId=updatePlotDto.crop_strainId;
+    plotEntity.seasonId=updatePlotDto.seasonId;
+    plotEntity.start_date=updatePlotDto.startDate;
+    plotEntity.end_date=updatePlotDto.endDate;
+
+    //projectEntity = await this.projectRepository.preload(projectEntity)
+    console.log(`PlotService service : going to update plot ${id}  project ${projectId} with cropstrain ${updatePlotDto.crop_strainId}`);
+    result  = await this.repository.save(plotEntity);
+    return result;
   };
 
   async delete(

@@ -7,9 +7,11 @@ import { PlotsService } from './services/plots.service';
 import { gPlotService } from './services/gplot.service';
 import { GrowingSeasonService } from './services/growing_season.service';
 import { PlotController,gPlotController, growingController } from './plots.controllers';
+import { ProjectsModule } from '../projects/projects.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Plots, gPlot, GrowingSeason])],
+    imports: [TypeOrmModule.forFeature([Plots, gPlot, GrowingSeason]),
+              ProjectsModule],
    // providers: [ProjectService, ...ProjectProviders],
     providers: [gPlotService, PlotsService, GrowingSeasonService],
     controllers: [PlotController, gPlotController, growingController ],

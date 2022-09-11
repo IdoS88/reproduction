@@ -1,10 +1,8 @@
 //sivan: TODO :
 // handle optionsl columns nullables
-
-import { OmitType, PartialType } from "@nestjs/mapped-types";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, IsOptional } from "class-validator";
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 export class CreatePlotDTO {
    // @ApiProperty()

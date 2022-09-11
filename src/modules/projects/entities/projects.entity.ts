@@ -15,9 +15,8 @@ export class Project extends BaseEntity{
   iconSrc: string;
 
   @ManyToMany(() => CropsStrain, 
-              (crpstrn: CropsStrain) => crpstrn.projectsArr) 
-              // { cascade: true ,
-              //   onUpdate:'CASCADE',
+              (crpstrn: CropsStrain) => crpstrn.projectsArr)
+              // { cascade: true })
               //   eager: true})
   // @JoinTable({
   //   name: "project_cropStrain", // table name for the junction table of this relation

@@ -13,33 +13,40 @@ import { CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
 export class ProjectsService {
 
     // sivan: better practice to costraint the type of conn. not know yet to which interface
-    constructor(
-        @InjectRepository(Project)
-        private projectRepository: Repository<Project>,
-        private cropsStrainService: CropsStrainService){
-          console.log("on ProjectService constructor")
-        };
+  constructor(
+    @InjectRepository(Project)
+    private projectRepository: Repository<Project>,
+    private cropsStrainService: CropsStrainService){
+      console.log("on ProjectService constructor")
+    };
     
-    async getHello(): Promise<string> {
-        return 'Hello Project!';
-    }
+  async getHello(): Promise<string> {
+      return 'Hello Project!';
+  }
     
   getAll(): Promise<Project[]> {
       console.log("project service : getAll()");
       return this.projectRepository.find();
-    }
+  }
 
 
-  async getById(id: number): Promise<Project> {
+  async getById(id: number): Promise<Project>{
       console.log("project service : getById() with project ID " + id);
       if (id <= 0)
         throw Error("project service : getById() id cannot be negative");
 
-      return this.projectRepository.findOne({
+      let projectEntity = await this.projectRepository.findOne({     
         where: {
           id: id,
+        },
+        relations: {
+          cropsStrainArr: true
         }
       })
+      if (projectEntity !== null){
+        projectEntity = await this.projectRepository.preload(projectEntity)
+      }
+      return (projectEntity)
     };
 
   async create(createProjectDto: CreateProjectDTO) {

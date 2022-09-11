@@ -72,8 +72,8 @@ export class PlotController {
         @Query('project') projectid : number,
         @Body() updatePlotDto: UpdatePlotDTO) {
         console.log("Plot controller: updatePlot ")
-        throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description,
-                                httpResponses.UPDATE_NOT_IMPLEMENTED.status);
+        //throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description,
+        //                        httpResponses.UPDATE_NOT_IMPLEMENTED.status);
         const plot = await this.plotsService.update(id, projectid, updatePlotDto);
         return plot;
     }

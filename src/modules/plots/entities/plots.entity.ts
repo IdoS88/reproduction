@@ -10,18 +10,24 @@ export class Plots extends BaseEntity{
   id: number;
 
   @Column()  projectId: number;
-  @OneToMany(type => Project, projectid=>Project.getId)
+  @OneToMany(type => Project, 
+             projectId=>Project.getId,
+             { cascade: true })
   @JoinColumn({name: "projectId" })
   project: Project;
   
-  @Column()  crop_strainid: number;
-  @OneToMany(type => CropsStrain, crop_strainid=>CropsStrain.getId, { nullable: true }) 
-  @JoinColumn({name: "crop_strainid" })  // should be one many to one
+  @Column()  crop_strainId: number;
+  @OneToMany(type => CropsStrain, 
+             crop_strainId=>CropsStrain.getId, 
+             { nullable: true }) 
+  @JoinColumn({name: "crop_strainId" })  // should be one many to one
   cropStrain: CropsStrain;
 
-  @OneToOne(type => GrowingSeason) 
-  @JoinColumn()  // should be one many to one
-  season: number;
+  @Column()  seasonId: number;
+  @OneToOne(type => GrowingSeason,
+            seasonId => GrowingSeason.getId) 
+  @JoinColumn({name: "seasonId"})  // should be one many to one
+  season: GrowingSeason;
 
   @Column()  // should be many to many to one
   main_gplot: number;

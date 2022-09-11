@@ -9,15 +9,14 @@ import {UpdateGPlotDTO, CreateGPlotDTO} from "../dto/gplot.dto";
 export class gPlotService {
 
     // sivan: better practice to costraint the type of conn. not know yet to which interface
-    constructor(
-        @InjectRepository(gPlot)
-        private repository: Repository<gPlot>){
-          console.log("on gPlotService constructor")
-        };
+  constructor(
+    @InjectRepository(gPlot)
+    private repository: Repository<gPlot>){
+    console.log("on gPlotService constructor")};
     
-    async getHello(): Promise<string> {
-        return 'Hello gPlot!';
-    }
+  async getHello(): Promise<string> {
+    return 'Hello gPlot!';
+  }
     
   // async getAll(): Promise<gPlot[]> {
   //     console.log("gPlotService : getAll()");
@@ -66,7 +65,6 @@ export class gPlotService {
     projectId: number,
     updateGPlotDto:UpdateGPlotDTO) {
       console.log(`gplot service : update gplot ${id} in project ${projectId} not implemented yet`);
-      return -1;
     };
 
   async delete(id: number,
