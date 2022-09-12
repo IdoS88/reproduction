@@ -26,7 +26,7 @@ export class ProjectsController {
 
     @Get()
     @Public(false)
-    @Scopes('View')
+   // @Scopes('View')
     @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
     async GetAllProjects(
         @AuthenticatedUser() user: any,
