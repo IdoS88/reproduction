@@ -9,6 +9,8 @@ import { CropsStrainService } from 'src/modules/crops/services/cropsStrain.servi
 import { CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
 //import { IProjectRepository } from "../data-access/project.repository";
 
+type relationsType = "none"| "plots" | "cropStrains"| "all";
+
 @Injectable()
 export class ProjectsService {
 
@@ -19,6 +21,16 @@ export class ProjectsService {
     private cropsStrainService: CropsStrainService){
       console.log("on ProjectService constructor")
     };
+   
+    private getRelationsRequest(relationsStr: relationsType): string[]{
+      let relatios=[];
+      switch (relationsStr){
+        case "none": { break;}
+        case "all":  { relatios=["plots","cropStrains"];   break;}
+        default : { relatios=[relationsStr];   break;}
+      }
+      return relatios
+    }
     
   async getHello(): Promise<string> {
       return 'Hello Project!';
@@ -30,18 +42,18 @@ export class ProjectsService {
   }
 
 
-  async getById(id: number): Promise<Project>{
+  async getById(id: number,
+                relationsStr: relationsType = "none"): Promise<Project>{
       console.log("project service : getById() with project ID " + id);
       if (id <= 0)
         throw Error("project service : getById() id cannot be negative");
-
+      
+      let relations=this.getRelationsRequest(relationsStr);
       let projectEntity = await this.projectRepository.findOne({     
         where: {
           id: id,
         },
-        relations: {
-          cropsStrainArr: true
-        }
+        relations: relations
       })
       if (projectEntity !== null){
         projectEntity = await this.projectRepository.preload(projectEntity)
@@ -75,7 +87,7 @@ export class ProjectsService {
       projectEntity.id = id;
       projectEntity.name=updateProjectsDto.name;
       projectEntity.iconSrc=updateProjectsDto.iconSrc;
-      if (cropStrianObjects!==null) projectEntity.cropsStrainArr=cropStrianObjects;
+      if (cropStrianObjects!==null) projectEntity.cropStrains=cropStrianObjects;
       //projectEntity = await this.projectRepository.preload(projectEntity)
       let result  = await this.projectRepository.save(projectEntity);
       return result;

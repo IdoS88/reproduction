@@ -40,6 +40,7 @@ export class GrowingSeasonService {
       })
   };
 
+  
   async getByProject(projectid: number): Promise<GrowingSeason[]> {
     console.log("GrowingSeasonService : getByProjectId() with project " + projectid);
     if (projectid <= 0)

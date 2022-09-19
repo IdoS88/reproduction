@@ -1,13 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CropsKindService } from './services/cropsKind.service';
-import { CreateCropsKindDto } from './dto/create-cropsKind.dto';
-import { UpdateCropsKindDto } from './dto/update-cropsKind.dto';
+import { CreateCropsKindDto, UpdateCropsKindDto } from './dto/cropsKind.dto';
 import { CropsService } from './services/crops.service';
-import { CreateCropDto } from './dto/create-crop.dto';
-import { UpdateCropDto } from './dto/update-crop.dto';
+import { CreateCropDto, UpdateCropDto } from './dto/crop.dto';
 import { CropsStrainService } from './services/cropsStrain.service';
-import { CreateCropsStrainDto } from './dto/create-cropsStrain.dto';
-import { UpdateCropsStrainDto } from './dto/update-cropsStrain.dto';
+import { CreateCropsStrainDto, UpdateCropsStrainDto } from './dto/cropsStrain.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 const cropsPathes={
@@ -76,11 +73,14 @@ export class CropsController {
   @Get()
   getAll() {
     return this.cropsService.getAll();
+    //return this.cropsService.getAll("all");
+    
   }
 
   @Get('bykind/:id')
-  getAllCroppsByCropsKind(@Param('id') id: number) {
-    return this.cropsService.getAllCroppsByCropsKind(id);
+  @UsePipes(new ValidationPipe({ transform: true }))
+    getAllCropsByKind(@Param('id') id: number) {
+    return this.cropsService.getAllCropsByKind(id);
   }
 
   @Patch("/:id")
@@ -129,7 +129,7 @@ export class CropsStrainController {
 
   @Get('bykind/:id')
   getAllCropsStrainByCropsKind(@Param('id') id: number) {
-    return this.cropsStrainService.getAllCropsStrainByCropsKind(id);
+    return this.cropsStrainService.getAllCropsStrainByKind(id);
   }
 
   @Patch("/:id")
@@ -138,7 +138,7 @@ export class CropsStrainController {
   @ApiResponse({ status: 403, description: 'Forbidden.'})
   async updateCropStrain(
       @Param('id') id: number,
-      @Body() updateCropsStrainDto: UpdateCropsStrainDto): Promise<number> {
+      @Body() updateCropsStrainDto: UpdateCropsStrainDto) {
       console.log("cropsStrain controller: updateCropStrain ${id} ")
       const cropStrain = await this.cropsStrainService.update(id, updateCropsStrainDto);
       return cropStrain;

@@ -1,13 +1,14 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany, BaseEntity, OneToMany } from 'typeorm';
 import {Project} from 'src/modules/projects/entities/projects.entity';
+import { SpecificEntity } from 'src/modules/infrastructures/entities/abstract.entity';
 
 @Entity('growing_season')
-export class GrowingSeason extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class GrowingSeason extends SpecificEntity {
+  // @PrimaryGeneratedColumn()
+  // id: number;
 
-  @Column()
-  projectId: number;
+  // @Column()
+  // projectId: number;
 
   @OneToMany(type => Project, projectid=>Project.getId)
   @JoinColumn({name: "projectId" })

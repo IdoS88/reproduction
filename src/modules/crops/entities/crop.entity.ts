@@ -1,11 +1,12 @@
+import { GenericEntity } from 'src/modules/infrastructures/entities/abstract.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
 import { CropsKind } from './cropsKind.entity';
 import { CropsStrain } from './cropsStrain.entity';
 
-@Entity()
-export class Crops extends BaseEntity{
-    @PrimaryGeneratedColumn()
-    id: number;
+@Entity('crops')
+export class Crops extends GenericEntity{
+   @PrimaryGeneratedColumn()
+   id: number;
 
     @Column()
     name: string;
@@ -20,5 +21,5 @@ export class Crops extends BaseEntity{
     kind: CropsKind;
 
     @OneToMany(type => CropsStrain, cropsStrain => cropsStrain.crop)
-    strain: CropsStrain[];
+    strains: CropsStrain[];
 }

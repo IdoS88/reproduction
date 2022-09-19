@@ -11,12 +11,15 @@ export class CreatePlotDTO {
     
     
     @ApiProperty()
+    @IsOptional()
     crop_strainId : number;
     
     @ApiProperty()
+    @IsOptional()
     seasonId: number;
     
     @ApiProperty()
+    @IsOptional()
     main_gplotId: number;
     
     @ApiProperty()
@@ -27,32 +30,3 @@ export class CreatePlotDTO {
 }
 
 export class UpdatePlotDTO extends PartialType(CreatePlotDTO){};
-
-export class FilterPlotQueryDTO{
-    @ApiProperty()
-    @IsInt()
-    @Type(() => Number)
-    projectId: number;
-    
-    @ApiProperty()
-    @IsInt()
-    @Type(() => Number)
-    @IsOptional()
-    crop_strainId : number;
-
-    @ApiProperty()
-    @IsInt()
-    @Type(() => Number)
-    @IsOptional()
-    sessionId: number;
-
-    @ApiProperty()
-    @IsInt()
-    @Type(() => Number)
-    @IsOptional()
-    main_gplotId: number;
-
-    @ApiProperty()
-    @IsOptional()
-    dates: Date[];
-}
