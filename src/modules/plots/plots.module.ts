@@ -8,12 +8,14 @@ import { gPlotService } from './services/gplot.service';
 import { GrowingSeasonService } from './services/growing_season.service';
 import { PlotController,gPlotController, growingController } from './plots.controllers';
 import { ProjectsModule } from '../projects/projects.module';
+import { PlotValidator } from './services/plots.validator';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Plots, gPlot, GrowingSeason]),
               ProjectsModule],
    // providers: [ProjectService, ...ProjectProviders],
-    providers: [gPlotService, PlotsService, GrowingSeasonService],
+    providers: [gPlotService, PlotsService, GrowingSeasonService,
+              PlotValidator],
     controllers: [PlotController, gPlotController, growingController ],
     exports: [gPlotService, PlotsService, GrowingSeasonService],
   })

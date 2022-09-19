@@ -1,6 +1,7 @@
 import { CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
+import { Plots } from 'src/modules/plots/entities/plots.entity';
 import { Entity, Column, PrimaryGeneratedColumn, 
-         BaseEntity, ManyToOne, JoinColumn, JoinTable, ManyToMany } from 'typeorm';
+         BaseEntity, ManyToOne, JoinColumn, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity('projects')
 export class Project extends BaseEntity{
@@ -14,8 +15,11 @@ export class Project extends BaseEntity{
   @Column()
   iconSrc: string;
 
+  @OneToMany(() => Plots, (plot) => plot.project)
+  plots!: Plots[]
+
   @ManyToMany(() => CropsStrain, 
-              (crpstrn: CropsStrain) => crpstrn.projectsArr)
+              (crpstrn: CropsStrain) => crpstrn.projects)
               // { cascade: true })
               //   eager: true})
   // @JoinTable({
@@ -29,5 +33,5 @@ export class Project extends BaseEntity{
   //       referencedColumnName: "id"
   //   }
 //})
-cropsStrainArr!: CropsStrain[];
+cropStrains!: CropsStrain[];
 }

@@ -1,9 +1,9 @@
-import { Controller , Get, Post, Put, Res,  Param, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe, Patch, HttpException} from '@nestjs/common';
+import { Controller , Get, Post, Put, Res,  Param, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe, Patch, HttpException, ParseIntPipe} from '@nestjs/common';
 import { Response } from 'express';
 import { PlotsService } from "./services/plots.service";
 import { gPlotService } from "./services/gplot.service";
 import { GrowingSeasonService } from "./services/growing_season.service";
-import { CreatePlotDTO , FilterPlotQueryDTO, UpdatePlotDTO} from "./dto/plots.dto";
+import { CreatePlotDTO , UpdatePlotDTO} from "./dto/plots.dto";
 import { UpdateGPlotDTO,  CreateGPlotDTO } from "./dto/gplot.dto";
 import { CreateGrowingSeasonDTO, UpdateGrowingSeasonDTO } from "./dto/growing_season.dto";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -45,7 +45,8 @@ export class PlotController {
         @Query('project') projectId: number,
         @Res() res: Response) {
         console.log('Plot controller: get GetPlotById ${plotid} in project ${projectId}')
-        let projObj = await this.plotsService.getByIdAndProject(plotid, projectId );
+        //let projObj = await this.plotsService.getByIdAndProject(plotid, projectId, "all");
+        let projObj = await this.plotsService.getByIdAndProject(plotid, projectId);
         return res.status(HttpStatus.OK).json(projObj);
     }
 
@@ -55,10 +56,10 @@ export class PlotController {
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     async createPlot(
-        @Query('project') projectid : number,
+        @Query('project',ParseIntPipe) projectid : number,
         @Body() createPlotDto: CreatePlotDTO) {
         console.log("Plot controller:createPlot ")
-        const plot = await this.plotsService.create(projectid, createPlotDto);
+        const plot = await this.plotsService.create(createPlotDto, projectid);
         return plot;
     }
 
@@ -68,13 +69,13 @@ export class PlotController {
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
     async updatePlot(
-        @Param('id') id: number,
-        @Query('project') projectid : number,
+        @Param('id',ParseIntPipe) id: number,
+        @Query('project',ParseIntPipe) projectid : number,
         @Body() updatePlotDto: UpdatePlotDTO) {
         console.log("Plot controller: updatePlot ")
         //throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description,
         //                        httpResponses.UPDATE_NOT_IMPLEMENTED.status);
-        const plot = await this.plotsService.update(id, projectid, updatePlotDto);
+        const plot = await this.plotsService.update(id, updatePlotDto, projectid);
         return plot;
     }
 
