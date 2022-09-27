@@ -91,7 +91,7 @@ export class WorkersService {
   
   async getByTypeAndProject(typeId: number, projectId: number): Promise<Worker[]> {
     console.log(`workerService : getByTypeAndProject() for type ${typeId} and project ${projectId}`);
-  // SELECT * FROM crops.tool JOIN crops.tool_to_types ON worker.id = tool_to_types.toolid WHERE tool_to_types.typeid = '2';
+  // SELECT * FROM Crop.tool JOIN Crop.tool_to_types ON worker.id = tool_to_types.toolid WHERE tool_to_types.typeid = '2';
   if (typeId <= 0)
     throw Error("Type id cannot be negative");
   
@@ -129,7 +129,7 @@ export class WorkersService {
 
 
   // async getAllWorkersByTypeId(typeid: number): Promise<Worker[]> {
-  //   // SELECT * FROM crops.worker JOIN crops.worker_to_types ON worker.id = worker_to_types.workerid WHERE worker_to_types.typeid = '2';
+  //   // SELECT * FROM Crop.worker JOIN Crop.worker_to_types ON worker.id = worker_to_types.workerid WHERE worker_to_types.typeid = '2';
   //   // SELECT `worker`.`id` AS `worker_id`, `worker`.`name` AS `worker_name`, `worker`.`projectid` AS `worker_projectid`, `worker`.`typesid` AS `worker_typesid` FROM `worker` `worker` LEFT JOIN `worker_to_types` `wt` ON `worker`.`id` = `wt`.`workerid` WHERE `wt`.`typeid` = ? -- PARAMETERS: ["1"]
   //   if (typeid <= 0)
   //     throw Error("Type id cannot be negative");

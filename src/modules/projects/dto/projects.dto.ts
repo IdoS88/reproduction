@@ -13,6 +13,6 @@ export class UpdateProjectDTO extends PartialType(CreateProjectDTO) {
     @ApiProperty({ isArray: true })
     @IsNumber({}, { each: true })
     @IsArray()
-    cropsStrainIds: number[];
+    CropStrainIds: number[];
 };
 

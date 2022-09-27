@@ -8,12 +8,7 @@ export class CreateCropDto {
     color: string;
 
     @ApiProperty()
-    kindId: number;
+    typeId: number;
 }
 
-export class UpdateCropDto extends PartialType(CreateCropDto) {
-    @ApiProperty({ isArray: true })
-    @IsNumber({}, { each: true })
-    @IsArray()
-    cropsStrainIds: number[];
-}
+export class UpdateCropDto extends PartialType(CreateCropDto) {}

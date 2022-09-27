@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger";
 
-export class CreateCropsStrainDto {
+export class CreateCropStrainDto {
     @ApiProperty()
     name: string;
     
@@ -11,4 +11,4 @@ export class CreateCropsStrainDto {
     cropId: number;
 }
 
-export class UpdateCropsStrainDto extends PartialType(CreateCropsStrainDto) {}
+export class UpdateCropStrainDto extends PartialType(CreateCropStrainDto) {}

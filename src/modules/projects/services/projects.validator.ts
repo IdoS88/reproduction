@@ -1,18 +1,17 @@
 import { err_EntityNotFound } from "src/modules/commons/errors";
-import { CropsStrain } from "src/modules/crops/entities/cropsStrain.entity";
-import { IGenericEntity } from "src/modules/infrastructures/entities/interface.entity";
+import { Injectable } from '@nestjs/common';
 import { GenericValidator } from "src/modules/infrastructures/services/validators.base";
 import { Tool } from "src/modules/tools/entities/tools.entity";
-import { Project } from "../entities/projects.entity";
 
+@Injectable()
 export class ProjectValidator extends GenericValidator{
     
     
-    // checkCropStrain(
-    //     cropStrianObject: CropsStrain): boolean{
+    // checkCroptrain(
+    //     CroptrianObject: CropStrain): boolean{
         
-    //     if (cropStrianObject==null){
-    //         throw new err_EntityNotFound(`Project validaotr:  requested cropStrain not found`);
+    //     if (CroptrianObject==null){
+    //         throw new err_EntityNotFound(`Project validaotr:  requested Croptrain not found`);
     //     }
 
     //     return true;

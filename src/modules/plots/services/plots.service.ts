@@ -7,12 +7,12 @@ import { CreatePlotDTO, UpdatePlotDTO } from "../dto/plots.dto";
 import { ProjectsService } from 'src/modules/projects/services/projects.service';
 import { Project } from 'src/modules/projects/entities/projects.entity';
 import {err_illegalMissingProject, err_EntityNotFound} from 'src/modules/commons/errors';
-import { CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
+//import { CropStrain } from 'src/modules/Crop/entities/CropStrain.entity';
 //import { GenericEntitryService } from 'src/modules/infrastructures/services/service.generic';
 import { SpecificEntityService } from 'src/modules/infrastructures/services/service.specific';
 import { PlotValidator } from './plots.validator';
 
-type relationsType = "none"| "cropStrain"| "project"| "all";
+type relationsType = "none"| "Croptrain"| "project"| "all";
 
 @Injectable()
 export class PlotsService extends SpecificEntityService<Plots, PlotValidator>{
@@ -21,9 +21,9 @@ export class PlotsService extends SpecificEntityService<Plots, PlotValidator>{
   constructor(
       @InjectRepository(Plots)
       protected repository: Repository<Plots>,
-      protected plotValidator:PlotValidator,
       @Inject(ProjectsService) private readonly projectService: ProjectsService){
-        super(repository, plotValidator)
+        super(repository);
+        this.validator = new PlotValidator(this);
 
         console.log("on PlotService constructor")
   };
@@ -32,12 +32,67 @@ export class PlotsService extends SpecificEntityService<Plots, PlotValidator>{
     let relatios=[];
     switch (relationsStr){
       case "none": { break;}
-      case "all":  { relatios=["project","cropStrain"];   break;}
+      case "all":  { relatios=["project","Croptrain"];   break;}
       default : { relatios=[relationsStr];   break;}
     }
     return relatios
   }
 
+  async create(createDTO: CreatePlotDTO,
+               projectId: number,): Promise<Plots|null> {
+    console.log("PlotService : create new plot in  " + projectId);
+      
+    let result = null;
+    let plotEntity = null;
+
+    let projectObject = await this.projectService.getById(projectId)
+    if (this.validator.checkProjectLink(projectObject, createDTO.crop_strainId)){
+      plotEntity = new Plots()
+      plotEntity.projectId=projectId;
+      plotEntity.seasonId=createDTO.seasonId;
+      plotEntity.start_date=createDTO.startDate;
+      plotEntity.end_date=createDTO.endDate;
+      if (createDTO.crop_strainId !== undefined){
+        plotEntity.crop_strainId=createDTO.crop_strainId;
+      }
+      
+      plotEntity=await this.repository.save(plotEntity);
+    }
+    return plotEntity;
+  }; 
+
+  async update(
+    id: number, 
+    updateDTO: UpdatePlotDTO,
+    projectId: number) {
+      
+    let result = null;
+    
+    console.log(`PlotService : update()  plot ${id} in project ${projectId}`);
+    let plotEntity = await this.getByIdAndProject(id, projectId)
+    this.validator.checkEntity(plotEntity)
+    let projectObject = await this.projectService.getById(projectId, "all")
+
+    if (this.validator.checkProjectLink(projectObject, updateDTO.crop_strainId)){
+      //save plot with relevant Crop strains
+      plotEntity.crop_strainId=updateDTO.crop_strainId;
+      plotEntity.seasonId=updateDTO.seasonId;
+      plotEntity.start_date=updateDTO.startDate;
+      plotEntity.end_date=updateDTO.endDate;
+
+      //projectEntity = await this.projectRepository.preload(projectEntity)
+      console.log(`PlotService service : going to update plot ${id}  project ${projectId} with Croptrain ${updateDTO.crop_strainId}`);
+      result  = await this.repository.save(plotEntity);
+    }
+    return result;
+  };
+
+  async delete(
+    id: number,
+    projectId: number): Promise<any> {
+      console.log(`PlotService : delete()  plot ${id} in project ${projectId} not implemented yet`);
+      return null;
+  };
   async getHello(): Promise<string> {
     return 'Hello Plot!';
   }
@@ -83,11 +138,11 @@ async getByProject(projectid: number): Promise<Plots[]> {
   
 //   let result = true; // its is ok  if crop_strainId is missing
 //   if (crop_strainId!==undefined){
-//     let cropStrain_in_project= projectObject.cropsStrainArr.find(
+//     let Croptrain_in_project= projectObject.CropStrainArr.find(
 //       function(x){  return (x.id === crop_strainId)});  
 
-//       if (cropStrain_in_project===null)  {
-//         throw new err_EntityNotFound (`PlotService service :  project ${projectObject.id} not allows cropstrain ${crop_strainId}`);
+//       if (Croptrain_in_project===null)  {
+//         throw new err_EntityNotFound (`PlotService service :  project ${projectObject.id} not allows Croptrain ${crop_strainId}`);
 //       }
 //       result=true;
 //   }
@@ -107,59 +162,5 @@ async getByProject(projectid: number): Promise<Plots[]> {
 //   }
     
   
-  async create(createDTO: CreatePlotDTO,
-               projectId: number,): Promise<Plots|null> {
-    console.log("PlotService : create new plot in  " + projectId);
-      
-    let result = null;
-    let plotEntity = null;
-
-    let projectObject = await this.projectService.getById(projectId)
-    if (this.validator.checkProjectLink(projectObject, createDTO.crop_strainId)){
-      plotEntity = new Plots()
-      plotEntity.projectId=projectId;
-      plotEntity.seasonId=createDTO.seasonId;
-      plotEntity.start_date=createDTO.startDate;
-      plotEntity.end_date=createDTO.endDate;
-      if (createDTO.crop_strainId !== undefined){
-        plotEntity.crop_strainId=createDTO.crop_strainId;
-      }
-      
-      plotEntity=await this.repository.save(plotEntity);
-    }
-    return plotEntity;
-  }; 
-
-  async update(
-    id: number, 
-    updateDTO: UpdatePlotDTO,
-    projectId: number) {
-      
-    let result = null;
-    
-    console.log(`PlotService : update()  plot ${id} in project ${projectId}`);
-    let plotEntity = await this.getByIdAndProject(id, projectId)
-    this.validator.checkEntity(plotEntity)
-    let projectObject = await this.projectService.getById(projectId, "all")
-
-    if (this.validator.checkProjectLink(projectObject, updateDTO.crop_strainId)){
-      //save plot with relevant crops strains
-      plotEntity.crop_strainId=updateDTO.crop_strainId;
-      plotEntity.seasonId=updateDTO.seasonId;
-      plotEntity.start_date=updateDTO.startDate;
-      plotEntity.end_date=updateDTO.endDate;
-
-      //projectEntity = await this.projectRepository.preload(projectEntity)
-      console.log(`PlotService service : going to update plot ${id}  project ${projectId} with cropstrain ${updateDTO.crop_strainId}`);
-      result  = await this.repository.save(plotEntity);
-    }
-    return result;
-  };
-
-  async delete(
-    id: number,
-    projectId: number): Promise<any> {
-      console.log(`PlotService : delete()  plot ${id} in project ${projectId} not implemented yet`);
-      return null;
-  };
+  
 }

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectsModule } from './modules/projects/projects.module'
 import { PlotsModule } from './modules/plots/plots.module'
-import { CropsModule } from './modules/crops/crops.module'
+import { CropModule } from './modules/crops/crop.module'
 import { WorkersModule } from './modules/workers/workers.module';
 import { ToolsModule } from './modules/tools/tools.module';
 import { UnitsModule } from './modules/units/units.module';
@@ -12,6 +12,7 @@ import { AutorizationModule } from './modules/config/auth.config.module';
 import { KeycloakConfigService } from './modules/config/auth.cnfig.service';
 
 import * as dotenv from 'dotenv'
+import { plainToClassFromExist } from 'class-transformer';
 
 dotenv.config();
 
@@ -45,7 +46,7 @@ dotenv.config();
     }),
     ProjectsModule ,
     PlotsModule,
-    CropsModule,
+    CropModule,
     UnitsModule,
     WorkersModule,
     ToolsModule

@@ -1,25 +1,30 @@
-import { Injectable , HttpException } from '@nestjs/common';
+import { Injectable , HttpException, forwardRef, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CustomRepositoryCannotInheritRepositoryError, Repository } from 'typeorm';
 //import { DATABASE_CONNECTION_TOKEN } from '../../commons/db.constants';
 import { Project } from '../entities/projects.entity';
 import { CreateProjectDTO, UpdateProjectDTO } from "../dto/projects.dto";
-//import { CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
-import { CropsStrainService } from 'src/modules/crops/services/cropsStrain.service';
-import { CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
+//import { CropStrain } from 'src/modules/Crop/entities/CropStrain.entity';
+import { CropsConnectionService } from 'src/modules/crops/services/crops.connection.service';
+import { CropStrain } from 'src/modules/crops/entities/cropStrain.entity';
+import { GenericValidator } from 'src/modules/infrastructures/services/validators.base';
+import { GenericEntityService } from 'src/modules/infrastructures/services/service.generic';
+import { ProjectValidator } from './projects.validator';
 //import { IProjectRepository } from "../data-access/project.repository";
 
 type relationsType = "none"| "plots" | "cropStrains"| "all";
 
 @Injectable()
-export class ProjectsService {
+export class ProjectsService extends GenericEntityService<Project, ProjectValidator>{
 
     // sivan: better practice to costraint the type of conn. not know yet to which interface
   constructor(
     @InjectRepository(Project)
-    private projectRepository: Repository<Project>,
-    private cropsStrainService: CropsStrainService){
+    protected projectRepository: Repository<Project>,
+    @Inject(CropsConnectionService) private cropsConnectionService: CropsConnectionService){
       console.log("on ProjectService constructor")
+      super(projectRepository);
+      this.validator = new ProjectValidator(this)
     };
    
     private getRelationsRequest(relationsStr: relationsType): string[]{
@@ -31,58 +36,29 @@ export class ProjectsService {
       }
       return relatios
     }
-    
-  async getHello(): Promise<string> {
-      return 'Hello Project!';
-  }
-    
-  getAll(): Promise<Project[]> {
-      console.log("project service : getAll()");
-      return this.projectRepository.find();
-  }
-
-
-  async getById(id: number,
-                relationsStr: relationsType = "none"): Promise<Project>{
-      console.log("project service : getById() with project ID " + id);
-      if (id <= 0)
-        throw Error("project service : getById() id cannot be negative");
-      
-      let relations=this.getRelationsRequest(relationsStr);
-      let projectEntity = await this.projectRepository.findOne({     
-        where: {
-          id: id,
-        },
-        relations: relations
-      })
-      if (projectEntity !== null){
-        projectEntity = await this.projectRepository.preload(projectEntity)
-      }
-      return (projectEntity)
-    };
-
-  async create(createProjectDto: CreateProjectDTO) {
+   
+    async create(createProjectDto: CreateProjectDTO): Promise<Project|null> {
       console.log("project service : create() with project name " + createProjectDto.name );
       let projectEntity = new Project()
       //projectEntity.id=createProjectDto.id;
       projectEntity.name=createProjectDto.name;
       projectEntity.iconSrc=createProjectDto.iconSrc;
       
-      await this.projectRepository.save(projectEntity);
-      return projectEntity.id;
+      let result = await this.projectRepository.save(projectEntity);
+      return result;
     }; 
 
   async update(id: number, 
-               updateProjectsDto: UpdateProjectDTO) {
+               updateProjectsDto: UpdateProjectDTO) : Promise<Project|null> {
       console.log(`project service : update()  project ID ${id} not implemented yes`);
       
-      // first load the crops strains 
-      let cropStrianObjects : CropsStrain[]=null;
-      if (updateProjectsDto.cropsStrainIds !== null){
-        cropStrianObjects=await this.cropsStrainService.getCropsStrainByStrainIds(updateProjectsDto.cropsStrainIds)
+      // first load the Crop strains 
+      let cropStrianObjects : CropStrain[]=null;
+      if (updateProjectsDto.CropStrainIds !== null){
+        cropStrianObjects=await this.cropsConnectionService.getAllStrainsByStrainIds(updateProjectsDto.CropStrainIds)
       }
 
-      //save project with relevant crops strains
+      //save project with relevant Crop strains
       let projectEntity = new Project()
       projectEntity.id = id;
       projectEntity.name=updateProjectsDto.name;
@@ -97,4 +73,38 @@ export class ProjectsService {
       console.log(`project service : delete()  project ID ${id} not implemented yes`);
       return null;
     };
+    
+  async getHello(): Promise<string> {
+      return 'Hello Project!';
+  }
+    
+  async getAll(): Promise<Project[]> {
+      console.log("project service : getAll()");
+      return await this.projectRepository.find();
+  }
+
+
+getById(id: number,
+                relationsStr: relationsType = "none"): Promise<Project|null>{
+      console.log("project service : getById() with project ID " + id);
+      if (id <= 0)
+        throw Error("project service : getById() id cannot be negative");
+      
+      let relations=this.getRelationsRequest(relationsStr);
+      let projectPromise = this.projectRepository.findOne({     
+        where: {
+          id: id,
+        },
+        relations: relations
+      })/*.then((projectEntity)=>{
+        if (projectEntity !== null){
+          return this.projectRepository.preload(projectEntity)
+        } else{
+          return null
+        }
+      })*/
+      return projectPromise
+    };
+
+  
 }

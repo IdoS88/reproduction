@@ -3,23 +3,26 @@ import { err_illegalMissingProject } from 'src/modules/commons/errors';
 //import { genericDTO } from '../dto/abstract.dto';
 import { GenericEntityService, IGenericEntityService } from './service.generic';
 import { ISpecificEntity } from '../entities/interface.entity';
-import { ISpecificValidator } from './validator.interface';
+//import { ISpecificValidator } from './validators.interface';
+import { SpecificValidator } from './validators.base';
+
 //import { SpecificEntity } from '../entities/abstract.entity';
 
 export interface ISpecificEntityService extends IGenericEntityService{
-    create:(createDTO?:unknown)=> Promise<unknown|null>;
-    update:(entityId: number,updateDTO?:unknown)=> Promise<unknown|null>;
-    delete:(entityId: number)=> Promise<boolean>;
+    create:(createDTO?:unknown, projectId?: number)=> Promise<unknown|null>;
+    update:(entityId: number,updateDTO?:unknown, projectId?: number)=> Promise<unknown|null>;
+    delete:(entityId: number, projectId?: number)=> Promise<boolean>;
 }
 
-export class SpecificEntityService<E extends ISpecificEntity, V extends ISpecificValidator > extends GenericEntityService<E, V>
+export class SpecificEntityService<E extends ISpecificEntity, V extends SpecificValidator > extends GenericEntityService<E, V>
  implements ISpecificEntityService   {
     constructor(
-        protected repository: Repository<E>,
-        protected validator: V){
-        super(repository, validator);
+        protected repository: Repository<E>){
+        super(repository);
     };
-        
+       
+   
+
     async getByIdAndProject(id: number, 
                             projectId?: number): Promise<E | null>{
             return null

@@ -42,7 +42,7 @@ export class ProjectsController {
     async GetProjectById(@Param('id') projectid: number,
                          @Res() res: Response) {
         console.log("Project controller: get GetProjectById " + projectid)
-        let projObj = await this.projectsService.getById(projectid);
+        let projObj = await this.projectsService.getById(projectid, "all");
         return res.status(HttpStatus.OK).json(projObj);
     }
 
@@ -51,7 +51,7 @@ export class ProjectsController {
     @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
-    async create(@Body() createProjectDto: CreateProjectDTO): Promise<number> {
+    async create(@Body() createProjectDto: CreateProjectDTO) {
         const project = await this.projectsService.create(createProjectDto);
         return project;
     }

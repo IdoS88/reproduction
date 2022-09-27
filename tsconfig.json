@@ -25,7 +25,8 @@
       "baseUrl": "./src",
       "paths":{
         "project/*": "modules/project/*",
-        "plot/*": "modules/plot/*"
+        "plot/*": "modules/plot/*",
+        "crops/*": "modules/crops/*"
       }
   }
 }

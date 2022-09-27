@@ -1,17 +1,22 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule} from '@nestjs/typeorm';
 import { Project } from './entities/projects.entity';
 import { ProjectsService } from './services/projects.service';
 import { ProjectsController } from './projects.controllers';
-import { CropsStrain } from '../crops/entities/cropsStrain.entity';
-import { CropsModule } from '../crops/crops.module';
+import { CropStrain } from '../crops/entities/cropStrain.entity';
+import { CropModule } from  'src/modules/crops/crop.module';
+import { ProjectValidator } from './services/projects.validator';
+//import { CropStrainService } from '../crops/services/cropStrain.service';
+//import { CropService } from '../crops/services/crop.service';
+import { CropsConnectionService } from '../crops/services/crops.connection.service';
 //import { ProjectAccessService } from './services/projectAccess.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Project, CropsStrain]),
-              CropsModule],
+    imports: [TypeOrmModule.forFeature([Project, CropStrain]),
+              forwardRef(()=>CropModule)],
    // providers: [ProjectService, ...ProjectProviders],
-    providers: [ProjectsService],
+    providers: [ProjectValidator,ProjectsService, 
+                CropsConnectionService],
     controllers: [ProjectsController],
     exports: [ProjectsService],
   })

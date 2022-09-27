@@ -66,7 +66,7 @@ export class ToolsService {
 
   async getByTypeAndProject(typeid: number, projectId: number): Promise<Tool[]> {
     console.log(`toolService : getByTypeAndProject() for type ${typeid} and project ${projectId}`);
-  // SELECT * FROM crops.tool JOIN crops.tool_to_types ON worker.id = tool_to_types.toolid WHERE tool_to_types.typeid = '2';
+  // SELECT * FROM Crop.tool JOIN Crop.tool_to_types ON worker.id = tool_to_types.toolid WHERE tool_to_types.typeid = '2';
   if (typeid <= 0)
     throw Error("Type id cannot be negative");
 

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, JoinColumn,BaseEntity, ManyToOne } from 'typeorm';
 import {Project} from 'src/modules/projects/entities/projects.entity';
-import {CropsStrain } from 'src/modules/crops/entities/cropsStrain.entity';
+import {CropStrain } from 'src/modules/crops/entities/cropStrain.entity';
 
 import {GrowingSeason} from './growing_season.entity';
 import { SpecificEntity } from 'src/modules/infrastructures/entities/abstract.entity';
@@ -19,12 +19,12 @@ export class Plots extends SpecificEntity{
   project: Project;
   
   @Column()  crop_strainId: number;
-  @ManyToOne(type => CropsStrain, 
+  @ManyToOne(type => CropStrain, 
              crop_strain=>crop_strain.plots, 
              { nullable: true,
                cascade: true }) 
   @JoinColumn({name: "crop_strainId" })  // should be one many to one
-  cropStrain: CropsStrain;
+  CropStrain: CropStrain;
 
   @Column()  seasonId: number;
   @OneToOne(type => GrowingSeason,

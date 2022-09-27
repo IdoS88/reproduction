@@ -1,10 +1,11 @@
 import { Plots } from 'src/modules/plots/entities/plots.entity';
 import { Project } from 'src/modules/projects/entities/projects.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn,BaseEntity, ManyToMany, JoinTable, OneToMany } from 'typeorm';
-import { Crops } from './crop.entity';
+import { Crop } from './crop.entity';
+import { CropType } from './CropType.entity';
 
-@Entity()
-export class CropsStrain extends BaseEntity{
+@Entity('cropStrain')
+export class CropStrain extends BaseEntity{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -16,11 +17,19 @@ export class CropsStrain extends BaseEntity{
 
     @Column()
     cropId: number;
-    @ManyToOne(() => Crops, crop => crop.strains,
+    @ManyToOne(() => Crop, crop => crop.strains,
                 { cascade: true ,
                     onUpdate:'CASCADE'})
     @JoinColumn({ name: "cropId" })
-    crop: Crops;
+    crop: Crop;
+
+    @Column()
+    typeId: number;
+    @ManyToOne(() => CropType, cropType => cropType.strains,
+                { cascade: true ,
+                    onUpdate:'CASCADE'})
+    @JoinColumn({ name: "typeId" })
+    cropType: CropType;
 
     @ManyToMany(() => Project, 
                 (prjct: Project) => prjct.cropStrains,
@@ -29,17 +38,17 @@ export class CropsStrain extends BaseEntity{
     @JoinTable({
         name: "project_cropStrain", // table name for the junction table of this relation
         inverseJoinColumn: {
-                name: "project",
+                name: "projectId",
                 referencedColumnName: "id"
         },
         joinColumn: {
-            name: "cropStrain",
+            name: "cropStrainId",
             referencedColumnName: "id"
         }
     })
     projects!: Project[];
 
 
-    @OneToMany(() => Plots, (plot) => plot.cropStrain)
+    @OneToMany(() => Plots, (plot) => plot.CropStrain)
     plots: Plots[]
 }

@@ -25,11 +25,11 @@ export class PlotValidator extends SpecificValidator{
 
         if (crop_strainId!==undefined){
             
-            let cropStrain_in_project= projectObject.cropStrains.find(
+            let Croptrain_in_project= projectObject.cropStrains.find(
                 function(x){  return (x.id === crop_strainId)});  
 
-            if (cropStrain_in_project===undefined)  {
-                throw new err_EntityNotFound (`PlotService validator :  project ${projectObject.id} not allows cropstrain ${crop_strainId}`);
+            if (Croptrain_in_project===undefined)  {
+                throw new err_EntityNotFound (`PlotService validator :  project ${projectObject.id} not allows Croptrain ${crop_strainId}`);
             }
            result=true; 
         }
