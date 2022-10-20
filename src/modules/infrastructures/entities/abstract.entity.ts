@@ -11,6 +11,6 @@ export class GenericEntity extends BaseEntity {
 export class SpecificEntity extends GenericEntity {
     //@OneToOne(type => Project) @JoinColumn()
     //sivan: could projectId be null ?  
-    @Column()  projectId: number;
+   // @Column()  projectId: number;
 }
  

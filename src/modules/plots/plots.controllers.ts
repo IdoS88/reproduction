@@ -1,18 +1,19 @@
 import { Controller , Get, Post, Put, Res,  Param, Body, Delete, Query, HttpStatus, UsePipes, ValidationPipe, Patch, HttpException, ParseIntPipe} from '@nestjs/common';
 import { Response } from 'express';
+import { PlotConnectionService } from "./services/plots.connection.service";
 import { PlotsService } from "./services/plots.service";
-import { gPlotService } from "./services/gplot.service";
-import { GrowingSeasonService } from "./services/growing_season.service";
+import { PlotStrainService } from "./services/plotStrain.service";
+import { SeasonService } from "./services/season.service";
 import { CreatePlotDTO , UpdatePlotDTO} from "./dto/plots.dto";
-import { UpdateGPlotDTO,  CreateGPlotDTO } from "./dto/gplot.dto";
-import { CreateGrowingSeasonDTO, UpdateGrowingSeasonDTO } from "./dto/growing_season.dto";
+import { UpdatePlotStrainDTO,  CreatePlotStrainDTO } from "./dto/plotStrain.dto";
+import { CreateSeasonDTO, UpdateSeasonDTO } from "./dto/season.dto";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { httpResponses} from 'src/modules/commons/routes.constants';
 
 const plotPathes={
     Plots :  'Plots/Plots',
-    gPlots: 'Plots/gPlots',
-    growing: 'Plots/growing'
+    PlotStrain: 'Plots/PlotStrain',
+    growing: 'Plots/season'
 }
 
 //Talk with Nadav and Maria about sharing query structure with front End
@@ -22,7 +23,8 @@ const plotPathes={
 export class PlotController {
     //plotService : PlotService;
 
-    constructor(private plotsService :PlotsService) {};
+    constructor(private plotsService :PlotsService,
+                private plotConnectionService : PlotConnectionService) {};
 
     @Get("/hello")
     async helloPlot()  {
@@ -36,8 +38,10 @@ export class PlotController {
         @Query('project') projectId: number,
         @Res() res: Response) {
         console.log("plot controller : GetPlotsByProject(${projectId})" );
-        let projObj = await this.plotsService.getByProject(projectId);
-        return res.status(HttpStatus.OK).json(projObj);
+        let plotObjs = await this.plotsService.getByProject(projectId);
+       // let projObj = await this.plotConnectionService.getPlotsByConstraints(
+       //     {projectId: projectId} );
+        return res.status(HttpStatus.OK).json(plotObjs);
     }
 
     @Get('/:id')
@@ -46,8 +50,11 @@ export class PlotController {
         @Res() res: Response) {
         console.log('Plot controller: get GetPlotById ${plotid} in project ${projectId}')
         //let projObj = await this.plotsService.getByIdAndProject(plotid, projectId, "all");
-        let projObj = await this.plotsService.getByIdAndProject(plotid, projectId);
-        return res.status(HttpStatus.OK).json(projObj);
+      let plotObj = await this.plotsService.getByIdAndProject(plotid, projectId);
+    //   let projObj = await this.plotConnectionService.getPlotsByConstraints(
+    //     {projectId: projectId,
+    //         plotId: plotid} );
+        return res.status(HttpStatus.OK).json(plotObj);
     }
 
 
@@ -91,15 +98,15 @@ export class PlotController {
     }
 }
 
-@ApiTags('Plots/GPlots')
-@Controller(plotPathes.gPlots)
-export class gPlotController {
-    constructor(private gplotService :gPlotService) {};
+@ApiTags(plotPathes.PlotStrain)
+@Controller(plotPathes.PlotStrain)
+export class PlotStrainController {
+    constructor(private plotStrainService :PlotStrainService) {};
    
     @Get("/hello")
     async helloPlot()  {
        let hellowAll : string; 
-       hellowAll = await this.gplotService.getHello() 
+       hellowAll = await this.plotStrainService.getHello() 
        return hellowAll;
     }
     // --- for gPlot
@@ -108,7 +115,7 @@ export class gPlotController {
         @Query('project') projectId: number,
         @Res() res: Response) {
         console.log("gPlotController  : GetGPlotsByProject()"  + projectId);
-        let gplotsObjects = await this.gplotService.getByProject(projectId);
+        let gplotsObjects = await this.plotStrainService.getByProject(projectId);
         return res.status(HttpStatus.OK).json(gplotsObjects);
     }
 
@@ -121,7 +128,7 @@ export class gPlotController {
         @Query('project') projectid: number,
         @Res() res: Response) {               
         console.log(`gPlotController: GetGPlotById ${id} for project ${projectid}`)
-        let gprojObj = await this.gplotService.getByIdAndProject(id, projectid);
+        let gprojObj = await this.plotStrainService.getByIdAndProject(id, projectid);
         return res.status(HttpStatus.OK).json(gprojObj);
     };
        
@@ -131,7 +138,7 @@ export class gPlotController {
     //                 @Query() query: {'projectid': number},    //   Plots/gPlots/?projectid=1
     //                 @Res() res: Response) {
     //     console.log("gPlotController: get getByProject ?{query.projectid}")
-    //     let gprojObjects = await this.gplotService.getByProject(query.projectid);
+    //     let gprojObjects = await this.plotStrainService.getByProject(query.projectid);
     //     return res.status(HttpStatus.OK).json(gprojObjects);
     // }
 
@@ -139,11 +146,11 @@ export class gPlotController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
-    async createGPlot(
+    async create(
         @Query('project') projectid: number,
-        @Body() createGPlotDto: CreateGPlotDTO) {
+        @Body() createPlotStrainDto: CreatePlotStrainDTO) {
         console.log("gPlotController: updatePlot in project ${projectid}")
-        const plot = await this.gplotService.create(projectid, createGPlotDto);
+        const plot = await this.plotStrainService.create(createPlotStrainDto, projectid);
         return plot;
     }
 
@@ -152,61 +159,61 @@ export class gPlotController {
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
-    async updategPlot(
+    async update(
         @Param('id') id: number,
         @Query('project') projectid: number,
-        @Body() updateGPlotDto: UpdateGPlotDTO) {
-        console.log("gPlotController: updategPlot in project ${projectid}")
-        throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description, 
-                                httpResponses.UPDATE_NOT_IMPLEMENTED.status);
-        const plot = await this.gplotService.update(id, projectid, updateGPlotDto);
+        @Body() updatePlotStrainDto: UpdatePlotStrainDTO) {
+        console.log("PlotStrainController: update in project ${projectid}")
+        //throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description, 
+        //                        httpResponses.UPDATE_NOT_IMPLEMENTED.status);
+        const plot = await this.plotStrainService.update(id, updatePlotStrainDto, projectid);
         return plot;
     }
 
     @Delete(':id')
     @ApiResponse({ status: 532, description: 'delete functionality not implemented.'})
-    async deletegPlot(
+    async delete(
         @Param('id') id: number,
         @Query('project') projectid : number) {
-        console.log("gPlotController: deletegPlot in project ${projectid}")
+        console.log("PlotStrainController: delete in project ${projectid}")
         throw new HttpException(httpResponses.DELETE_NOT_IMPLEMENTED.description, 
                                 httpResponses.DELETE_NOT_IMPLEMENTED.status);
-        const growingSeasion = await this.gplotService.delete(id, projectid);
+        const growingSeasion = await this.plotStrainService.delete(id, projectid);
         return growingSeasion;
     }
 }
 
 @ApiTags(plotPathes.growing)
 @Controller(plotPathes.growing)
-export class growingController {
+export class seasonController {
 
-    constructor(private growingSeasonService:GrowingSeasonService) {};
+    constructor(private seasonService:SeasonService) {};
 
     @Get("/hello")
     async helloPlot()  {
        let hellowAll : string; 
-       hellowAll = await this.growingSeasonService.getHello() 
+       hellowAll = await this.seasonService.getHello() 
        return hellowAll;
     }
 
     // --- for growingSesion
     @Get()
     async GetAllGrowingSeason(
-        @Query('project') projectid: number,
+        @Query('project') projectId: number,
         @Res() res: Response) {
-        console.log('GrowingSeason controller : GetAllGrowingSeason() for project ${projectid}');
-        let allObjects= await this.growingSeasonService.getByProject(projectid);
+        console.log('season controller : GetAllGrowingSeason() for project ${projectid}');
+        let allObjects= await this.seasonService.getByProject(projectId);
 
         return res.status(HttpStatus.OK).json(allObjects);
     }
 
     @Get("/:id")
-    async GetGrowingSeasonByIdAndProject(
+    async GetSeasonByIdAndProject(
         @Query('project') projectid: number,
         @Param('id')  id: number ,
         @Res() res: Response) {
         console.log("GrowingSeason controller: get GetGrowingSeasonByIdAndProject ${id} for project ${projectid}")
-        let growingObj = await this.growingSeasonService.getByIdAndProject(id, projectid);
+        let growingObj = await this.seasonService.getByIdAndProject(id, projectid);
         return res.status(HttpStatus.OK).json(growingObj);
     }
 
@@ -214,11 +221,11 @@ export class growingController {
     @UsePipes(new ValidationPipe({ transform: true }))
     @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
-    async createGrowingSeason(
+    async createSeason(
         @Query('project') projectid : number,
-        @Body() createGrowingSeasonDto: CreateGrowingSeasonDTO) {
+        @Body() createSeasonDto: CreateSeasonDTO) {
         console.log("GrowingSeason controller: createGrowingSeason ${projectid}")
-        const growingSeason = await this.growingSeasonService.create(projectid, createGrowingSeasonDto);
+        const growingSeason = await this.seasonService.create(createSeasonDto,projectid);
         return growingSeason;
     }
 
@@ -227,26 +234,26 @@ export class growingController {
     @ApiResponse({ status: 201, description: 'The record has been successfully updated.'})
     @ApiResponse({ status: 403, description: 'Forbidden.'})
     @ApiResponse({ status: 531, description: 'update functionality not implemented.'})
-    async updateGrowingSeason(
+    async updateSeason(
         @Param('id') id: number,
         @Query('project') projectid : number,
-        @Body() updateGrowingSeasonDto: UpdateGrowingSeasonDTO): Promise<number> {
-        console.log('GrowingSeason controller: updateGrowingSeason ${projectid}')
+        @Body() updateSeasonDto: UpdateSeasonDTO) {
+        console.log('GrowingSeason controller: updateSeason ${projectid}')
         throw new HttpException(httpResponses.UPDATE_NOT_IMPLEMENTED.description, 
                                 httpResponses.UPDATE_NOT_IMPLEMENTED.status);
-        const plot = await this.growingSeasonService.update(id, projectid, updateGrowingSeasonDto);
+        const plot = await this.seasonService.update(id, updateSeasonDto, projectid);
         return plot;
     }
 
     @Delete(':id')
     @ApiResponse({ status: 532, description: 'delete functionality not implemented.'})
-    async deleteGrowingSeason(
+    async deleteSeason(
         @Param('id') plotgrowingSeasionIdid: number,
         @Query('project') projectid : number) {
         console.log("GrowingSeason Controller: delete GrowingSeason in project ${projectId}")
         throw new HttpException(httpResponses.DELETE_NOT_IMPLEMENTED.description, 
                                 httpResponses.DELETE_NOT_IMPLEMENTED.status);
-        const growingSeasion = await this.growingSeasonService.delete(projectid, plotgrowingSeasionIdid);
+        const growingSeasion = await this.seasonService.delete(projectid, plotgrowingSeasionIdid);
         return growingSeasion;
     }
 }
