@@ -13,11 +13,7 @@ import { PlotsService } from './plots.service';
 
 @Injectable()
 export class PlotConnectionService {
-  //sivan: better practice to costraint the type of conn. not know yet to which interface
   constructor(
-      // @InjectRepository(PlotsConnection)
-      // protected repository: Repository<PlotsConnection>,
-      //@Inject(ProjectsService) private readonly projectService: ProjectsService,
       private ds : DataSource){
       
         console.log("on PlotsConnection constructor")
