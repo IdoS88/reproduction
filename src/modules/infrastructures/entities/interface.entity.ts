@@ -5,5 +5,5 @@ export interface IGenericEntity extends BaseEntity{
 }
 
 export interface ISpecificEntity extends IGenericEntity{
-    projectId: number;
+   // projectId: number;
 }

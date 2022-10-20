@@ -9,7 +9,7 @@ import {CropType} from '../entities/cropType.entity'
 export class CropsConnectionService {
     constructor(private dataSource : DataSource){ }
 
-     
+    
     async getStrainsByProject(projectId: number): Promise<CropStrain[]>{
         //console.log ("sivan: getStrainsIdsByProject not implemented yet");
         let cropStrains = await this.dataSource.manager
