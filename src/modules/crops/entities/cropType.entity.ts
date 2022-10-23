@@ -1,7 +1,7 @@
 import { GenericEntity } from 'src/modules/infrastructures/entities/abstract.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Crop } from './crop.entity';
-import { CropStrain } from './CropStrain.entity';
+import { CropStrain } from './cropStrain.entity';
 
 @Entity('cropType')
 export class CropType extends GenericEntity{

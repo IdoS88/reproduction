@@ -2,7 +2,7 @@ import { PlotStrain } from 'src/modules/plots/entities/plotStrain.entity';
 import { Project } from 'src/modules/projects/entities/projects.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn,BaseEntity, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Crop } from './crop.entity';
-import { CropType } from './CropType.entity';
+import { CropType } from './cropType.entity';
 
 @Entity('cropStrain')
 export class CropStrain extends BaseEntity{
