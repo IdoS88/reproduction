@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { CreateCropTypeDto, UpdateCropTypeDto } from '../dto/CropType.dto';
+import { CreateCropTypeDto, UpdateCropTypeDto } from '../dto/cropType.dto';
 import { CropType } from '../entities/cropType.entity';
 import { GenericEntityService } from 'src/modules/infrastructures/services/service.generic';
 import { CropValidator } from './crops.validator';
