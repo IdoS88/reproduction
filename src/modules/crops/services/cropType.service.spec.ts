@@ -55,16 +55,16 @@ describe("CropType Service", () => {
             console.log(func);
             expect(mockRepository.save).toBeCalledTimes(1);
             expect(mockRepository.save).toBeCalledWith({ id: 1, name: "api", Crop: [], strains: [] });
-            return expect(func).toEqual({ id: 1, name: "api", Crop: [], strains: [] });
+            return expect(func).resolves.toEqual({ id: 1, name: "api", Crop: [], strains: [] });
         });
         it("should have failed creating a new cropType entity", async () => {
-            expect(() => cropTypeService.create({ name: "123123" })).toThrow(Error);
+            await expect(() => cropTypeService.create({ name: "123123" })).rejects.toThrow(Error);
             expect(cropTypeService.create({ name: "123123" })).toBeCalledWith({ name: "123123" });
             expect(mockRepository.save).toBeCalledTimes(0);
         });
         // can use the special library big naughty strings to check wait for confirmation
         it("should have failed creating a new cropType entity because contains special letters", async () => {
-            expect(() => cropTypeService.create({ name: "$1.00" })).toThrow(Error);
+            await expect(cropTypeService.create({ name: "$1.00" })).rejects.toThrow(Error);
         })
     });
     // unnecceray as it a repository function
@@ -79,23 +79,23 @@ describe("CropType Service", () => {
             repoSpy.mockRestore();
             repoSpy = jest.spyOn(mockRepository, "findOne");
         });
-        it("should return a cropType entity", () => {
-            expect(cropTypeService.getCropTypeById(1)).resolves.toEqual(oneCropType);
+        it("should return a cropType entity", async () => {
+            await expect(cropTypeService.getCropTypeById(1)).resolves.toEqual(oneCropType);
             expect(repoSpy).toBeCalledWith({ where: { id: 1 } });
         });
         test('should get an error for non negative nor positive invalid id', async () => {
-            expect(() => cropTypeService.getCropTypeById(0)).toThrow('id cannot be negative')
+            await expect(cropTypeService.getCropTypeById(0)).rejects.toThrow('CropType id cannot be negative')
             expect(repoSpy).toBeCalledTimes(0);
             // return await cropTypeService.getCropTypeById(0).catch(e => expect(e.message).toBe('CropType id cannot be negative'));
         });
         test('should get an error for negative invalid id', async () => {
-            expect(() => cropTypeService.getCropTypeById(Number.MIN_VALUE - 1)).toThrow(Error);
-            expect(() => cropTypeService.getCropTypeById(Number.MIN_VALUE - 1)).toThrow('CropType id cannot be negative');
+            await expect(cropTypeService.getCropTypeById(Number.MIN_VALUE - 1)).rejects.toThrow(Error);
+            await expect(cropTypeService.getCropTypeById(Number.MIN_VALUE - 1)).rejects.toThrow('CropType id cannot be negative');
             expect(repoSpy).toBeCalledTimes(0);
             //return await cropTypeService.getCropTypeById(Number.MIN_VALUE - 1).catch(e => expect(e.message).toBe('CropType id cannot be negative'));
         });
         test('should get an error for max positive invalid id', async () => {
-            expect(() => cropTypeService.getCropTypeById(Number.MAX_VALUE + 1)).toThrow(Error);
+            await expect(cropTypeService.getCropTypeById(Number.MAX_VALUE + 1)).rejects.toThrow(Error);
             expect(repoSpy).toBeCalledTimes(0);
         });
     });
@@ -113,9 +113,9 @@ describe("CropType Service", () => {
         // didn't understand which ids been passed? is it the main id, the cropId or the croptype Id?
         let idNumbers: number[] = [1, 2, 3];
 
-        it("should return an array of cropTypes", () => {
+        it("should return an array of cropTypes", async () => {
             let repoSpy = jest.spyOn(mockRepository, "find").mockImplementationOnce(jest.fn((options: FindManyOptions<CropType>) => Promise.resolve(array)));
-            expect(cropTypeService.getAllTypesByStrainIds(idNumbers)).resolves.toEqual(array);
+            await expect(cropTypeService.getAllTypesByStrainIds(idNumbers)).resolves.toEqual(array);
             expect(repoSpy).toBeCalledTimes(1);
             expect(repoSpy).toBeCalledWith({
                 where: {
@@ -124,10 +124,10 @@ describe("CropType Service", () => {
             });
         });
 
-        it("should fail and throw exception", () => {
+        it("should fail and throw exception", async () => {
             let repoSpy = jest.spyOn(mockRepository, "find").mockImplementationOnce(jest.fn((options: FindManyOptions<CropType>) => Promise.resolve(array)));
             idNumbers = [1, 4];
-            expect(() => cropTypeService.getAllTypesByStrainIds(idNumbers)).toThrow(Error);
+            await expect(cropTypeService.getAllTypesByStrainIds(idNumbers)).rejects.toThrow(Error);
             expect(repoSpy).toBeCalledTimes(0); // not sure!!
             expect(repoSpy).toBeCalledWith({
                 where: {
@@ -135,10 +135,10 @@ describe("CropType Service", () => {
                 },
             });
         });
-        it("should fail and throw exception because 0 id doesn't exists", () => {
+        it("should fail and throw exception because 0 id doesn't exists", async () => {
             let repoSpy = jest.spyOn(mockRepository, "find").mockImplementationOnce(jest.fn((options: FindManyOptions<CropType>) => Promise.resolve(array)));
             idNumbers = [0];
-            expect(() => cropTypeService.getAllTypesByStrainIds(idNumbers)).toThrow(Error);
+            await expect(cropTypeService.getAllTypesByStrainIds(idNumbers)).rejects.toThrow(Error);
             expect(repoSpy).toBeCalledTimes(0); // not sure!!
             expect(repoSpy).toBeCalledWith({
                 where: {
@@ -147,10 +147,10 @@ describe("CropType Service", () => {
             });
         });
 
-        it("should fail and throw exception because of overflow value", () => {
+        it("should fail and throw exception because of overflow value", async () => {
             let repoSpy = jest.spyOn(mockRepository, "find").mockImplementationOnce(jest.fn((options: FindManyOptions<CropType>) => Promise.resolve(array)));
             idNumbers = [1, Number.MAX_VALUE + 1];
-            expect(() => cropTypeService.getAllTypesByStrainIds(idNumbers)).toThrow(Error);
+            await expect(cropTypeService.getAllTypesByStrainIds(idNumbers)).rejects.toThrow(Error);
             expect(repoSpy).toBeCalledTimes(0); // not sure!!
             expect(repoSpy).toBeCalledWith({
                 where: {
@@ -159,10 +159,10 @@ describe("CropType Service", () => {
             });
         });
 
-        it("should fail and throw exception because of negative value", () => {
+        it("should fail and throw exception because of negative value", async () => {
             let repoSpy = jest.spyOn(mockRepository, "find").mockImplementationOnce(jest.fn((options: FindManyOptions<CropType>) => Promise.resolve(array)));
             idNumbers = [1, 2, -3];
-            expect(() => cropTypeService.getAllTypesByStrainIds(idNumbers)).toThrow(Error);
+            await expect(cropTypeService.getAllTypesByStrainIds(idNumbers)).rejects.toThrow(Error);
             expect(repoSpy).toBeCalledTimes(0); // not sure!!
             expect(repoSpy).toBeCalledWith({
                 where: {
@@ -183,50 +183,50 @@ describe("CropType Service", () => {
 
         let cropStrainsArray = [cropStrain1, cropStrain2, cropStrain3];
         let cropTypesDictionary = new Map<number, CropType>([[cropType1.id, cropType1], [cropType2.id, cropType2], [cropType3.id, cropType3]]);
-        it("should return a crop type dictionary of ", () => {
+        it("should return a crop type dictionary of ", async () => {
             let repoSpyConnectionService = jest.spyOn(mockConnectionService, "getStrainsByProject");
             repoSpyConnectionService.mockImplementationOnce(jest.fn(projectId => cropStrainsArray));
             let repoSpyCropTypeService = jest.spyOn(cropTypeService, "getAllTypesByStrainIds");
-            expect(cropTypeService.getAllCropsTypeByProject(1)).resolves.toEqual(cropTypesDictionary);
+            await expect(cropTypeService.getAllCropsTypeByProject(1)).resolves.toEqual(cropTypesDictionary);
             expect(repoSpyConnectionService).toBeCalledTimes(1);
             expect(repoSpyConnectionService).toBeCalledWith(1);
             expect(repoSpyCropTypeService).toBeCalledTimes(1);
             expect(repoSpyCropTypeService).toBeCalledWith([cropStrain1.id, cropStrain2.id, cropStrain3.id]);
         });
 
-        it("should throws an exception because the connection method didn't work or didn't find anything", () => {
+        it("should throws an exception because the connection method didn't work or didn't find anything", async () => {
             // not sure what it will return or will throws an exception????
             let repoSpyConnectionService = jest.spyOn(mockConnectionService, "getStrainsByProject");
             let repoSpyCropTypeService = jest.spyOn(cropTypeService, "getAllTypesByStrainIds");
             //expect(cropTypeService.getAllCropsTypeByProject(321312312)).resolves.toEqual(new Map<number,CropType>());
-            expect(() => cropTypeService.getAllCropsTypeByProject(321312312)).toThrow(Error);
+            await expect(cropTypeService.getAllCropsTypeByProject(321312312)).rejects.toThrow(Error);
             expect(repoSpyConnectionService).toBeCalledTimes(1);
             expect(repoSpyConnectionService).toBeCalledWith(321312312);
             expect(repoSpyCropTypeService).toBeCalledTimes(0);
-        }); 
+        });
 
-        it("should throws an exception because of negative value", () => {
+        it("should throws an exception because of negative value", async () => {
             // not sure what it will return or will throws an exception????
             let repoSpyConnectionService = jest.spyOn(mockConnectionService, "getStrainsByProject");
             let repoSpyCropTypeService = jest.spyOn(cropTypeService, "getAllTypesByStrainIds");
             //expect(cropTypeService.getAllCropsTypeByProject(-1)).resolves.toEqual(new Map<number,CropType>());
-            expect(() => cropTypeService.getAllCropsTypeByProject(-1)).toThrow(Error);
+            await expect(cropTypeService.getAllCropsTypeByProject(-1)).rejects.toThrow(Error);
             expect(repoSpyConnectionService).toBeCalledTimes(0);
             expect(repoSpyCropTypeService).toBeCalledTimes(0);
-        }); 
-        
-        it("should throws an exception because of overflow values", () => {
+        });
+
+        it("should throws an exception because of overflow values", async () => {
             // not sure what it will return or will throws an exception????
             let repoSpyConnectionService = jest.spyOn(mockConnectionService, "getStrainsByProject");
             let repoSpyCropTypeService = jest.spyOn(cropTypeService, "getAllTypesByStrainIds");
             //expect(cropTypeService.getAllCropsTypeByProject(Number.MAX_VALUE+233))).resolves.toEqual(new Map<number,CropType>());
-            expect(() => cropTypeService.getAllCropsTypeByProject(Number.MAX_VALUE+233)).toThrow(Error);
-            expect(() => cropTypeService.getAllCropsTypeByProject(Number.MIN_VALUE-500)).toThrow(Error);
+            await expect(cropTypeService.getAllCropsTypeByProject(Number.MAX_VALUE + 233)).rejects.toThrow(Error);
+            await expect(cropTypeService.getAllCropsTypeByProject(Number.MIN_VALUE - 500)).rejects.toThrow(Error);
             expect(repoSpyConnectionService).toBeCalledTimes(0);
             expect(repoSpyCropTypeService).toBeCalledTimes(0);
-        }); 
+        });
 
-        it("should throws an exception for unmatched cropstrains found ", () => {
+        it("should throws an exception for unmatched cropstrains found ", async () => {
             cropStrain1.id = 55;
             cropStrain2.id = 44;
             cropStrain3.id = 130; // unmatched cropstrains ids
@@ -234,10 +234,11 @@ describe("CropType Service", () => {
             repoSpyConnectionService.mockImplementationOnce(projectId => cropStrainsArray);
             let repoSpyCropTypeService = jest.spyOn(cropTypeService, "getAllTypesByStrainIds");
             mockRepository.find.mockResolvedValueOnce([]);
-            expect(()=>cropTypeService.getAllCropsTypeByProject(50)).toThrow(Error);
+            await expect(cropTypeService.getAllCropsTypeByProject(50)).rejects.toThrow(Error);
             expect(repoSpyConnectionService).toBeCalledTimes(50);
             expect(repoSpyConnectionService).toBeCalledWith(50);
-            expect(repoSpyCropTypeService).toHaveLength(3);
+            expect(repoSpyCropTypeService).toHaveProperty("length");
+            expect(repoSpyCropTypeService).toHaveReturnedWith([1]);
             expect(repoSpyCropTypeService).toBeCalledTimes(1);
             expect(repoSpyCropTypeService).toBeCalledWith([cropStrain1.id, cropStrain2.id, cropStrain3.id]);
         });

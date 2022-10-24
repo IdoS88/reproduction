@@ -1,9 +1,9 @@
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule} from '@nestjs/typeorm';
-import { CropType } from './entities/CropType.entity';
+import { CropType } from './entities/cropType.entity';
 import { Crop } from './entities/crop.entity';
-import { CropStrain } from './entities/CropStrain.entity';
+import { CropStrain } from './entities/cropStrain.entity';
 import {CropStrainController} from './controllers/cropStrain.controller'
 import {CropController} from './controllers/crop.controller'
 import { CropStrainService } from './services/cropStrain.service';

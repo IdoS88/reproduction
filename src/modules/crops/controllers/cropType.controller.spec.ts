@@ -6,19 +6,19 @@ import { Repository } from 'typeorm';
 import { CropType } from '../entities/cropType.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 
-describe("Crop Type Controller & Service", () => {
+describe("Crop Type Controller", () => {
     let cropTypeController: CropTypeController;
     // let cropTypeService: CropTypeService;
     let userRepository: Repository<CropType>;
-
+    const mockService ={};
 
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [CropTypeController],
-            // providers: [
-            //     CropTypeService,
-            //     {
+            providers: [
+                CropTypeService],
+                
             //         provide: getRepositoryToken(CropType),
             //         useValue: {
             //             save: jest.fn(),
@@ -27,7 +27,7 @@ describe("Crop Type Controller & Service", () => {
             //         }
             //     },
             // ],
-        }).compile();
+        }).overrideProvider(CropTypeService).useValue(mockService).compile();
 
         // cropTypeService = new CropTypeService(getRepositoryToken(CropType),);
         cropTypeController = module.get<CropTypeController>(CropTypeController);
