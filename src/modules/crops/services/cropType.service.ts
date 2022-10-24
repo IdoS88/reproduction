@@ -54,11 +54,14 @@ export class CropTypeService extends  GenericEntityService <CropType, CropValida
     });
   }
 
-  async getAllTypesByStrainIds(cropTypeIds: number[]):Promise<CropType[]>{
+  async getAllTypesByStrainIds(cropStrsinIds: number[]):Promise<CropType[]>{
     let cropsTypes = this.repository.find({
+        relations: ["strains"],
         where: {
-            id: In (cropTypeIds)
-          },
+            strains: {
+              id: In (cropStrsinIds)
+            }
+          }
         })
     return cropsTypes
   }

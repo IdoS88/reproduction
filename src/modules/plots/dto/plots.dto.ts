@@ -12,21 +12,23 @@ export class CreatePlotDTO {
     
     @ApiProperty()
     @IsOptional()
-    crop_strainId : number;
+    name : string;
     
     @ApiProperty()
     @IsOptional()
-    seasonId: number;
+    number: number;
     
     @ApiProperty()
     @IsOptional()
-    main_gplotId: number;
+    area: number;
     
     @ApiProperty()
-    startDate: Date;
+    @IsOptional()
+    remarks: string;
     
     @ApiProperty()
-    endDate: Date;
+    @IsOptional()
+    geomId: number;
 }
 
 export class UpdatePlotDTO extends PartialType(CreatePlotDTO){};

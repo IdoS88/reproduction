@@ -11,6 +11,7 @@ import {err_illegalMissingProject, err_EntityNotFound} from 'src/modules/commons
 //import { GenericEntitryService } from 'src/modules/infrastructures/services/service.generic';
 import { SpecificEntityService } from 'src/modules/infrastructures/services/service.specific';
 import { PlotValidator } from './plots.validator';
+import { PlotConnectionService } from './plots.connection.service';
 
 type relationsType = "none"| "Croptrain"| "project"| "all";
 
@@ -21,7 +22,8 @@ export class PlotsService extends SpecificEntityService<Plots, PlotValidator>{
   constructor(
       @InjectRepository(Plots)
       protected repository: Repository<Plots>,
-      @Inject(ProjectsService) private readonly projectService: ProjectsService){
+      @Inject(ProjectsService) private readonly projectService: ProjectsService,
+      @Inject(PlotConnectionService) private readonly plotConnectionService: PlotConnectionService ){
         super(repository);
         this.validator = new PlotValidator(this);
 
@@ -32,32 +34,27 @@ export class PlotsService extends SpecificEntityService<Plots, PlotValidator>{
     let relatios=[];
     switch (relationsStr){
       case "none": { break;}
-      case "all":  { relatios=["project","Croptrain"];   break;}
+      case "all":  { relatios=["project","CropStrain"];   break;}
       default : { relatios=[relationsStr];   break;}
     }
     return relatios
   }
 
   async create(createDTO: CreatePlotDTO,
-               projectId: number,): Promise<Plots|null> {
+               projectId: number): Promise<Plots|null> {
     console.log("PlotService : create new plot in  " + projectId);
       
     let result = null;
     let plotEntity = null;
 
     let projectObject = await this.projectService.getById(projectId)
-    if (this.validator.checkProjectLink(projectObject, createDTO.crop_strainId)){
-      plotEntity = new Plots()
-      plotEntity.projectId=projectId;
-      plotEntity.seasonId=createDTO.seasonId;
-      plotEntity.start_date=createDTO.startDate;
-      plotEntity.end_date=createDTO.endDate;
-      if (createDTO.crop_strainId !== undefined){
-        plotEntity.crop_strainId=createDTO.crop_strainId;
-      }
+    this.validator.checkEntity(projectObject)
+    
+    plotEntity = this.repository.create(createDTO)
+    plotEntity.project = projectObject;
       
-      plotEntity=await this.repository.save(plotEntity);
-    }
+    plotEntity=await this.repository.save(plotEntity);
+
     return plotEntity;
   }; 
 
@@ -71,19 +68,20 @@ export class PlotsService extends SpecificEntityService<Plots, PlotValidator>{
     console.log(`PlotService : update()  plot ${id} in project ${projectId}`);
     let plotEntity = await this.getByIdAndProject(id, projectId)
     this.validator.checkEntity(plotEntity)
-    let projectObject = await this.projectService.getById(projectId, "all")
+    //let projectObject = await this.projectService.getById(projectId, "all")
 
-    if (this.validator.checkProjectLink(projectObject, updateDTO.crop_strainId)){
+   // if (this.validator.checkProjectLink(projectObject, updateDTO.crop_strainId)){
       //save plot with relevant Crop strains
-      plotEntity.crop_strainId=updateDTO.crop_strainId;
-      plotEntity.seasonId=updateDTO.seasonId;
-      plotEntity.start_date=updateDTO.startDate;
-      plotEntity.end_date=updateDTO.endDate;
+    plotEntity.name=updateDTO.name;
+    plotEntity.number=updateDTO.number;
+    plotEntity.remarks=updateDTO.remarks;
+    plotEntity.area=updateDTO.area;
 
-      //projectEntity = await this.projectRepository.preload(projectEntity)
-      console.log(`PlotService service : going to update plot ${id}  project ${projectId} with Croptrain ${updateDTO.crop_strainId}`);
-      result  = await this.repository.save(plotEntity);
-    }
+    //projectEntity = await this.projectRepository.preload(projectEntity)
+     console.log(`PlotService service : going to update plot ${id}  project ${projectId} `);
+      
+    //}
+    result  = await this.repository.save(plotEntity);
     return result;
   };
 
@@ -102,65 +100,47 @@ export class PlotsService extends SpecificEntityService<Plots, PlotValidator>{
     id: number, 
     projectId: number,
     relationsStr: relationsType = "none"): Promise<Plots> {
-    console.log(`PlotService : getById() with ID ${id} and project ${projectId}`);
-    if (id <= 0)
-        throw Error("PlotService : getById() id cannot be negative");
+    console.log(`PlotService : getByIdAndProject() with ID ${id} and project ${projectId}`);
+    
+    var result : Plots=null
+    // let connectionObj = await this.plotConnectionService.getPlotsByConstraints(
+    //   {projectId: projectId,
+    //   plotId: id});
+    // if (connectionObj.length==1){
+    //   result = connectionObj[0].plots
+    // } 
+    // return result;
+
 
     let relations=this.getRelationsRequest(relationsStr);
     return this.repository.findOne({
-        where: {
-          id: id,
-          projectId: projectId
-        },
-        relations: relations
-    })
+         relations: relations,
+          where: {
+            id: id,
+            projectId: projectId
+           }
+         })
   };
 
 
 
-// sivan: shis method should by in specific service
-async getByProject(projectid: number): Promise<Plots[]> {
-    console.log("PlotService : getByProject() for project " + projectid);
-    if (projectid <= 0)
-        throw Error("PlotService : getByProject() id cannot be negative");
-
-    return this.repository.find({
-        where: {
-          projectId: projectid,
-        }
-    })
-  };
-
-// sivan: this functionality should be in validator  - but independed on linked Entity type
-// validateProjectLink(
-//   projectObject: Project, 
-//   crop_strainId?: number): boolean{
-  
-//   let result = true; // its is ok  if crop_strainId is missing
-//   if (crop_strainId!==undefined){
-//     let Croptrain_in_project= projectObject.CropStrainArr.find(
-//       function(x){  return (x.id === crop_strainId)});  
-
-//       if (Croptrain_in_project===null)  {
-//         throw new err_EntityNotFound (`PlotService service :  project ${projectObject.id} not allows Croptrain ${crop_strainId}`);
-//       }
-//       result=true;
-//   }
-//   return result;
-// }
-
-// async validateEntityWithProject(
-//   id :  number,
-//   projectId: number): Promise<Plots | null>{
-
-//     let plotObj = await this.getByIdAndProject(id, projectId)
-//     if (plotObj===null){
-//       //sivan: should through exception
-//       throw new err_EntityNotFound(`PlotService service :  plot ${plotObj.id} dosn't have project ${projectId}`);
-//     }
-//     return plotObj
-//   }
+  // // sivan: shis method should by in specific service
+  async getByProject(projectId: number): Promise<Plots[]> {
+    console.log("PlotService : getByProject() for project " + projectId);
+      
+    var result : Plots[]=null
+    // let connectionObjs = await this.plotConnectionService.getPlotsByConstraints(
+    //   {projectId: projectId});
+    //   if (connectionObjs.length>0){
+    //     result = connectionObjs.map((obj, index)=>{return obj.plots;})
+    //   } 
+    //   return result;    
     
-  
+    return this.repository.find({
+      where: {
+        projectId: projectId
+      }
+    })
+  };  
   
 }

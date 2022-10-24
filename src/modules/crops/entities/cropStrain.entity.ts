@@ -1,4 +1,4 @@
-import { Plots } from 'src/modules/plots/entities/plots.entity';
+import { PlotStrain } from 'src/modules/plots/entities/plotStrain.entity';
 import { Project } from 'src/modules/projects/entities/projects.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn,BaseEntity, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Crop } from './crop.entity';
@@ -49,6 +49,6 @@ export class CropStrain extends BaseEntity{
     projects!: Project[];
 
 
-    @OneToMany(() => Plots, (plot) => plot.CropStrain)
-    plots: Plots[]
+    @OneToMany(() => PlotStrain, plotStrainId => PlotStrain.getId)
+    plotStrainIds: number[]
 }

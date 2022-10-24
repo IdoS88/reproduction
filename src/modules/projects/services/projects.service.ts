@@ -85,7 +85,7 @@ export class ProjectsService extends GenericEntityService<Project, ProjectValida
 
 
 getById(id: number,
-                relationsStr: relationsType = "none"): Promise<Project|null>{
+        relationsStr: relationsType = "none"): Promise<Project|null>{
       console.log("project service : getById() with project ID " + id);
       if (id <= 0)
         throw Error("project service : getById() id cannot be negative");
