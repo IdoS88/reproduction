@@ -9,18 +9,18 @@ import { CropsConnectionService } from './crops.connection.service';
 
 
 @Injectable()
-export class CropTypeService extends  GenericEntityService <CropType, CropValidator> {
+export class CropTypeService extends GenericEntityService<CropType, CropValidator> {
   constructor(
     @InjectRepository(CropType)
     protected repository: Repository<CropType>,
     //@Inject(forwardRef(()=>CropService)) private cropService: CropService
     @Inject(CropsConnectionService) private cropsConnectionService: CropsConnectionService
-  ){
+  ) {
     super(repository);
-    this.validator=new CropValidator(this)
+    this.validator = new CropValidator(this)
   }
 
-  async create(createCropTypeDto: CreateCropTypeDto): Promise<CropType|null> {
+  async create(createCropTypeDto: CreateCropTypeDto): Promise<CropType | null> {
     let cropType = new CropType();
     cropType.name = createCropTypeDto.name;
     await this.repository.save(cropType);
@@ -28,16 +28,16 @@ export class CropTypeService extends  GenericEntityService <CropType, CropValida
   }
 
   async update(
-    id: number, 
-    updateCropTypeDto: UpdateCropTypeDto) :Promise<CropType| null> {
-      console.log('CropTypeRepository : update()  CropType ${id}  not implemented yet');
-      return null;
+    id: number,
+    updateCropTypeDto: UpdateCropTypeDto): Promise<CropType | null> {
+    console.log('CropTypeRepository : update()  CropType ${id}  not implemented yet');
+    return null;
   };
 
   async delete(
     id: number): Promise<boolean> {
-      console.log('CropTypeRepository : delete()  CropType ${id} not implemented yet');
-      return false;
+    console.log('CropTypeRepository : delete()  CropType ${id} not implemented yet');
+    return false;
   };
 
   getAll(): Promise<CropType[]> {
@@ -54,35 +54,35 @@ export class CropTypeService extends  GenericEntityService <CropType, CropValida
     });
   }
 
-  async getAllTypesByStrainIds(cropStrsinIds: number[]):Promise<CropType[]>{
+  async getAllTypesByStrainIds(cropStrsinIds: number[]): Promise<CropType[]> {
     let cropsTypes = this.repository.find({
-        relations: ["strains"],
-        where: {
-            strains: {
-              id: In (cropStrsinIds)
-            }
-          }
-        })
+      relations: ["strains"],
+      where: {
+        strains: {
+          id: In(cropStrsinIds)
+        }
+      }
+    })
     return cropsTypes
   }
 
-  
+
 
   async getAllCropsTypeByProject(projectId: number): Promise<Map<number, CropType>> {
-   
+
     let cropStrains = await this.cropsConnectionService.getStrainsByProject(projectId)
-    const  CropTypeDictionary = new Map<number, CropType>();
-    
-    if (cropStrains.length>0){
-      let  cropStrainsMap = new Map(
-        cropStrains.map(e=>{return [e.id, e]}))
-              
-      let cropStrainsIds =Array.from(cropStrainsMap.keys())
-    
-      let cropTypeObjects=await this.getAllTypesByStrainIds(cropStrainsIds)
+    const CropTypeDictionary = new Map<number, CropType>();
+
+    if (cropStrains.length > 0) {
+      let cropStrainsMap = new Map(
+        cropStrains.map(e => { return [e.id, e] }))
+
+      let cropStrainsIds = Array.from(cropStrainsMap.keys())
+
+      let cropTypeObjects = await this.getAllTypesByStrainIds(cropStrainsIds)
       if (cropTypeObjects.length > 0) {
-        for (const cropType of cropTypeObjects){  
-           CropTypeDictionary.set(cropType.id, cropType);
+        for (const cropType of cropTypeObjects) {
+          CropTypeDictionary.set(cropType.id, cropType);
         }
       }
     }
