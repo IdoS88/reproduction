@@ -9,6 +9,8 @@ import { once } from 'events';
 import { CropStrain } from '../entities/cropStrain.entity';
 // @ts-ignore
 import * as json from 'big-list-of-naughty-strings';
+import { first } from 'rxjs';
+import e from 'express';
 const oneCrop = new Crop();
 oneCrop.id = expect.any(Number);
 oneCrop.name = "avocado";
@@ -28,8 +30,31 @@ const oneCropType = new CropType();
 oneCropType.id = 3;
 oneCropType.name = "Gidulim";
 
+const firstCrop = new Crop();
+firstCrop.name = "avocado";
+firstCrop.color = "green";
+firstCrop.typeId = 3;
+firstCrop.type = oneCropType;
+firstCrop.strains = [new CropStrain()];
+
+const secondCrop = new Crop();
+secondCrop.name = "banana";
+secondCrop.color = "yellow";
+secondCrop.typeId = 3;
+secondCrop.type = oneCropType;
+secondCrop.strains = [new CropStrain()];
+
+const thirdCrop = new Crop();
+thirdCrop.name = "mango";
+thirdCrop.color = "orange";
+thirdCrop.typeId = 3;
+thirdCrop.type = oneCropType;
+thirdCrop.strains = [new CropStrain()];
+
+const crops = [firstCrop, secondCrop, thirdCrop];
+
 const mockRepository = {
-    save: jest.fn((crop:Crop) => Promise.resolve(crop)),
+    save: jest.fn((crop: Crop) => Promise.resolve(crop)),
     find: jest.fn(),
     findOne: jest.fn()
 };
@@ -97,7 +122,7 @@ describe("Crop Service", () => {
             json.forEach(word => {
                 it("should throw error for invalid name", async () => {
                     await expect(cropService.create({ name: word, color: "green", typeId: 1 })).rejects.toThrow(Error);
-                }); 
+                });
             });
             it("save shouldn't be called", () => {
                 expect(repoSpy).toBeCalledTimes(0);
@@ -150,7 +175,7 @@ describe("Crop Service", () => {
             beforeAll(async () => {
                 mockRepository.findOne.mockImplementationOnce((options: FindOneOptions<Crop>) => Promise.resolve(oneCrop));
                 spyCropId = jest.spyOn(cropService, "getCropById");
-                func = await cropService.update(1, { name: "banana", color: "yellow", typeId: 3 });
+                // func = await cropService.update(1, { name: "banana", color: "yellow", typeId: 3 });
             });
             afterAll(() => {
                 spyCropId.mockRestore();
@@ -159,9 +184,9 @@ describe("Crop Service", () => {
                 oneCrop.typeId = 1;
             });
 
-            it("should return a crop object", () => {
-                console.log(func);
-                expect(func).toEqual(updateCrop);
+            it("should return a crop object", async () => {
+                // console.log(func);
+                await expect(cropService.update(1, { name: "banana", color: "yellow", typeId: 3 })).toEqual(updateCrop);
 
             });
             it("should be called 1 time and with complete entity", () => {
@@ -214,9 +239,9 @@ describe("Crop Service", () => {
                 await expect(cropService.update(1, { name: "@$@\n", color: "yellow", typeId: 3 })).rejects.toThrow(Error);
             });
             json.forEach(word => {
-                it("should throw error for invalid name", async () => {
+                it("should throw error for invalid name " + word, async () => {
                     await expect(cropService.update(1, { name: word, color: "yellow", typeId: 3 })).rejects.toThrow(Error);
-                }); 
+                });
             });
             it("should fails and throws an exception for invalid color", async () => {
                 await expect(cropService.update(1, { name: "banana", color: "yell", typeId: 3 })).rejects.toThrow(Error);
@@ -225,8 +250,27 @@ describe("Crop Service", () => {
                 await expect(cropService.update(1, { name: "banana", color: "yellow", typeId: -5 })).rejects.toThrow(Error);
             });
             it("should fails and throws an exception for invalid overflow typeId number", async () => {
-                await expect(cropService.update(1, { name: "123123", color: "yellow", typeId: Number.MAX_VALUE+21312321 })).rejects.toThrow(Error);
+                await expect(cropService.update(1, { name: "123123", color: "yellow", typeId: Number.MAX_VALUE + 21312321 })).rejects.toThrow(Error);
             });
         });
     });
+    describe("getAll", () => {
+        mockRepository.find.mockClear();
+        mockRepository.find.mockImplementation((options?: FindManyOptions<Crop>) => {
+            if (options) {
+                if (options.relations == "none") { return Promise.resolve(null); }
+                else if (options.relations == "all") { return Promise.resolve(crops); }
+            }
+            // else
+            //     return Promise.resolve(crops);
+
+        });
+        it("should return an array of crops", async () => {
+            await expect(cropService.getAll("all")).toBe(crops);
+        });
+    });
+    // describe("getCropById",()=>{
+
+    //     mockRepository.findOne.mockImplementation()
+    // });
 });
